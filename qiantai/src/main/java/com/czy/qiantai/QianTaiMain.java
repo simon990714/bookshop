@@ -20,10 +20,10 @@ public class QianTaiMain {
 
     @Autowired
     private UserService userService;
-    @RequestMapping("/")
-    @ResponseBody
-    public List<User> testCode(){
-        List<User> list = userService.list();
-        return list;
-    }
+//    @RequestMapping("/")
+//    @ResponseBody
+//    public List<User> testCode(){
+//        List<User> list = userService.list();
+//        return list;
+//    }
 }

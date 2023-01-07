@@ -1,9 +1,14 @@
 package com.czy.qiantai.controller;
 
 
+import com.czy.qiantai.entity.Booktype;
+import com.czy.qiantai.service.BooktypeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -16,6 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/booktype")
 public class BooktypeController {
+
+    @Autowired
+    private BooktypeService booktypeService;
+
+    @RequestMapping("all")
+    public List<Booktype> all(){
+        List<Booktype> list = booktypeService.list();
+        return list;
+    }
 
 }
 

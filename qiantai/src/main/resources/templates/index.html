@@ -6,34 +6,146 @@
   <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
         integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 </head>
 <body>
 
-<div id="app">
-  {{content}}
+<div class=" navbar navbar-default navbar-fixed-top" id="publicHeaderApp">
+  <div class="container-fluid" >
+
+    <div class="row">
+      <div class="col-md-12 text-center" style="background-color: cornflowerblue; color: white">
+        <a href="#" th:href="@{/}" style="color: white"><h3>蜗牛书店</h3></a>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 10px">
+      <div class="col-md-6">
+        <!--图书类型列表-->
+        <ol class="breadcrumb">
+          <li v-for="bookType in bookTypeList">
+            <a href="" v-text="bookType.name" ></a>
+          </li>
+        </ol>
+      </div>
+
+      <div class="col-md-3">
+        <form action="" method="post" class="form-inline">
+          <div class="form-group">
+            <input type="text" name="searchName" class="form-control" id="search"
+                   placeholder="请输入搜索关键词">
+          </div>
+          <button type="submit" class="btn btn-default">搜索</button>
+        </form>
+      </div>
+
+      <div class="col-md-3">
+        <a class="btn btn-default btn-sm" href="">登录</a>
+        <a class="btn btn-default btn-sm" href="">注册</a>
+        <a class="btn btn-default btn-sm" href="">我的购物车</a>
+        <a class="btn btn-default btn-sm" href="">我的订单</a>
+        <a class="btn btn-default btn-sm" href="">退出</a>
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
 
 <script>
-  console.log("..........index..........")
+  console.log(".........publicHeader...........");
+  let publicHeader = new Vue({
+    el: "#publicHeaderApp",
+    data: {
+      bookTypeList: []
+    },
+    methods: {
+      initBookTypeList(){
+        let _this = this;
+        let url = "/booktype/all";
+        $.get(url,function (data){
+          console.log(data);
+          _this.bookTypeList = data;
+        },"json")
+      }
+    },
+    created() {
+      this.initBookTypeList();
+    }
+  });
+</script>
+
+<div class="container-fluid" id="app" style="margin-top: 180px;margin-bottom: 100px">
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-12">
+        <p style="background-color: cornflowerblue ; color: white; font-size: 30px">图书销售排行榜</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+          <img src="" alt="..." class="col-sm-6 col-md-6">
+          <div class="caption text-left">
+            <p>排名:<span>第N</span></p>
+            <p>书名:<span>name</span></p>
+            <p>价格:<span>price</span></p>
+            <p>
+              <a class="btn btn-primary" href="">详情</a> &nbsp;&nbsp;&nbsp;&nbsp;
+              <a class="btn btn-success" href="">加入购物车</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+<script>
+
+  console.log(".........index...........")
 
   new Vue({
-
     el: "#app"
     ,
     data: {
-      content: "欢迎访问蜗牛书店"
-    }
-    ,
-    method: {
 
     }
+    ,
+    methods: {}
 
   });
 
 
-
 </script>
+
+<div class="navbar navbar-default navbar-fixed-bottom" id="publicfooterApp">
+
+  <div class="row">
+    <div class="col-md-12 text-center" style="background-color: cornflowerblue; color: white">
+      <h3>Copyright © 1922-2022 woniuxy.com</h3>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  console.log(".........publicfooter...........");
+  let publicfooter = new Vue({
+    el: "#publicfooterApp",
+    data: {},
+    methods: {},
+    created() {}
+  });
+</script>
+
 
 </body>
 </html>

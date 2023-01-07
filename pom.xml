@@ -16,6 +16,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>qiantai</module>
+        <module>Demos/MyBatisPlusDemo</module>
     </modules>
 
     <properties>

@@ -1,5 +1,6 @@
 package com.czy.qiantai.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.czy.qiantai.entity.Book;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface BookService extends IService<Book> {
 
+    Page<Book> getTopNBook(Integer pageNo, Integer topN);
 }

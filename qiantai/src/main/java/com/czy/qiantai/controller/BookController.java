@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.czy.qiantai.entity.Book;
 import com.czy.qiantai.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,7 +22,7 @@ import java.util.List;
  * @author czy
  * @since 2023-01-07 12:01:18
  */
-@RestController
+@Controller
 @RequestMapping("/book")
 public class BookController {
 
@@ -32,6 +34,20 @@ public class BookController {
     public List<Book> topNine(Integer topN){
         Page<Book> topNBook = bookService.getTopNBook(1,topN);
         return topNBook.getRecords();
+    }
+
+    @RequestMapping("singleBook")
+    public String singleBook(Integer bookId, Model model){
+        Book book = bookService.getById(bookId);
+        System.out.println(book);
+        model.addAttribute("book",book);
+        return "singleBook";
+    }
+
+    @RequestMapping("booksOfType")
+    public String booksOfType(Integer typeId,Model model){
+        model.addAttribute("typeId",typeId);
+        return "booksOfType";
     }
 
 }

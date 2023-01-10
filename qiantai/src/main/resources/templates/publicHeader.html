@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>公共头部</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+
+<div class=" navbar navbar-default navbar-fixed-top" id="publicHeaderApp" th:fragment="publicHeader">
+    <div class="container-fluid" >
+
+        <div class="row">
+            <div class="col-md-12 text-center" style="background-color: cornflowerblue; color: white">
+                <a href="#" th:href="@{/}" style="color: white"><h3>蜗牛书店</h3></a>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 10px">
+            <div class="col-md-6">
+                <!--图书类型列表-->
+                <ol class="breadcrumb">
+                    <li v-for="bookType in bookTypeList">
+                        <a :href="'/book/booksOfType?typeId='+bookType.id"  v-text="bookType.name" ></a>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="col-md-3">
+                <form action="" method="post" class="form-inline">
+                    <div class="form-group">
+                        <input type="text" name="searchName" class="form-control" id="search"
+                               placeholder="请输入搜索关键词">
+                    </div>
+                    <button type="submit" class="btn btn-default">todo搜索</button>
+                </form>
+            </div>
+
+            <div class="col-md-3">
+                <a class="btn btn-default btn-sm" href="">todo登录</a>
+                <a class="btn btn-default btn-sm" href="">todo注册</a>
+                <a class="btn btn-default btn-sm" href="">todo我的购物车</a>
+                <a class="btn btn-default btn-sm" href="">todo我的订单</a>
+                <a class="btn btn-default btn-sm" href="">todo退出</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+</body>
+</html>

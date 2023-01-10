@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,6 +49,16 @@ public class BookController {
     public String booksOfType(Integer typeId,Model model){
         model.addAttribute("typeId",typeId);
         return "booksOfType";
+    }
+
+    @RequestMapping("pageBooksOfType")
+    @ResponseBody
+    public Page<Book> pageBooksOfType(
+            @RequestParam(defaultValue = "1") Integer currentPage ,
+            @RequestParam(defaultValue = "9") Integer pageSize,
+            Integer typeId
+    ){
+        return bookService.getPageBooksByTypeId(currentPage,pageSize,typeId);
     }
 
 }

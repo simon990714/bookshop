@@ -15,4 +15,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface BookService extends IService<Book> {
 
     Page<Book> getTopNBook(Integer pageNo, Integer topN);
+
+    Page<Book> getPageBooksByTypeId(Integer currentPage, Integer pageSize, Integer typeId);
 }

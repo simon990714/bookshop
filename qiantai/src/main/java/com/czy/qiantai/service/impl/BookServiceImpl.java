@@ -30,4 +30,14 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
         Page<Book> bookPageResult = bookMapper.selectPage(bookPage, queryWrapper);
         return bookPageResult;
     }
+
+    @Override
+    public Page<Book> getPageBooksByTypeId(Integer currentPage, Integer pageSize, Integer typeId) {
+        Page<Book> bookPage = new Page<>(currentPage,pageSize);
+        QueryWrapper<Book> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("buycount");
+        queryWrapper.eq("typeId",typeId);
+        Page<Book> bookPageResult = bookMapper.selectPage(bookPage, queryWrapper);
+        return bookPageResult;
+    }
 }

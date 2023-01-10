@@ -24,7 +24,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
     @Autowired
     private BookMapper bookMapper;
     @Override
-    @Cacheable(value = "book",key = "#root.targetClass+#root.methodName")
+//    @Cacheable(value = "book",key = "#root.targetClass+#root.methodName")
     public Page<Book> getTopNBook(Integer pageNo, Integer topN){
         Page<Book> bookPage = new Page<>(pageNo,topN);
         QueryWrapper<Book> queryWrapper = new QueryWrapper<>();
@@ -34,11 +34,10 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
     }
 
     @Override
-    @Cacheable(value = "book",key = "#root.targetClass+#root.methodName")
+//    @Cacheable(value = "book",key = "#root.targetClass+#root.methodName")
     public Page<Book> getPageBooksByTypeId(Integer currentPage, Integer pageSize, Integer typeId) {
         Page<Book> bookPage = new Page<>(currentPage,pageSize);
         QueryWrapper<Book> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("buycount");
         queryWrapper.eq("typeId",typeId);
         Page<Book> bookPageResult = bookMapper.selectPage(bookPage, queryWrapper);
         return bookPageResult;

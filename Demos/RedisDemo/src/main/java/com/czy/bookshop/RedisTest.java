@@ -25,4 +25,12 @@ public class RedisTest {
 //        3.关闭redis
         jedis.close();
     }
+
+
+    @Test
+    public void test2(){
+        Jedis jedis = JedisPoolUtil.getJedis();
+        System.out.println(jedis.ping("hello world!"));
+        JedisPoolUtil.close(jedis);
+    }
 }

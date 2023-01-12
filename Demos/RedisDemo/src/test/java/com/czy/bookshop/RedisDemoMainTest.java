@@ -20,6 +20,9 @@ public class RedisDemoMainTest {
     @Autowired
     StringRedisTemplate stringRedisTemplate ;
 
+    @Autowired
+    RedisTemplate<String,Object> stringObjectRedisTemplate;
+
 
     @Test
     void testTemplate(){
@@ -34,6 +37,16 @@ public class RedisDemoMainTest {
         ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
         stringValueOperations.set(key,value);
         System.out.println(stringValueOperations.get(key));
+
+    }
+
+
+    @Test
+    void testSerializerTest(){
+        Person rick = new Person("rick", 88);
+        ValueOperations<String, Object> stringObjectValueOperations = stringObjectRedisTemplate.opsForValue();
+        stringObjectValueOperations.set("rick",rick);
+        System.out.println(stringObjectValueOperations.get("rick"));
 
     }
 

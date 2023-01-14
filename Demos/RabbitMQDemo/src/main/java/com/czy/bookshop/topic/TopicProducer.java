@@ -4,6 +4,7 @@ import com.czy.bookshop.ConnectionUtils;
 import com.czy.bookshop.MqConst;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.MessageProperties;
 
 import java.io.IOException;
 
@@ -21,7 +22,8 @@ public class TopicProducer {
 
 
     public static void send(Channel channel,String msg,String routingKey) throws IOException {
-        channel.basicPublish(MqConst.TOPIC_EXCHANGE,routingKey,null,msg.getBytes());
+        //消息持久化，在 props 里面加上  MessageProperties.PERSISTENT_BASIC  ,表示坚持不懈持久化
+        channel.basicPublish(MqConst.TOPIC_EXCHANGE,routingKey, MessageProperties.PERSISTENT_BASIC,msg.getBytes());
         System.out.println("生产者发送了一条数据[" + routingKey +"]： " + msg);
     }
 }

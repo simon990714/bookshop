@@ -28,7 +28,7 @@ public class FanoutConsumer1 {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 String msg = new String(body);
-                System.out.println(" [消费者1] received : " + msg + "!");
+                System.out.println(" [接收到消息]  : " + msg + "!");
 
                 //手动ack
                 channel.basicAck(envelope.getDeliveryTag(),true);

@@ -1,4 +1,4 @@
-package com.czy.bookshop.fanout;
+package com.czy.bookshop.direct;
 
 import com.czy.bookshop.ConnectionUtils;
 import com.czy.bookshop.MqConst;
@@ -7,20 +7,23 @@ import com.rabbitmq.client.*;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-public class FanoutConsumer2 {
+public class DirectConsumer2 {
     public static void main(String[] args) throws IOException, TimeoutException {
         Connection connection = ConnectionUtils.getConnection();
 
         Channel channel = connection.createChannel();
 
         //声明交换机
-        channel.exchangeDeclare(MqConst.FANOUT_EXCHANGE, BuiltinExchangeType.FANOUT);
+        channel.exchangeDeclare(MqConst.DIRECT_EXCHANGE, BuiltinExchangeType.DIRECT);
 
         //声明队列
-        channel.queueDeclare(MqConst.FANOUT_QUEUE2,false,false,false,null);
+        channel.queueDeclare(MqConst.DIRECT_QUEUE2,false,false,false,null);
 
         //绑定交换机
-        channel.queueBind(MqConst.FANOUT_QUEUE2,MqConst.FANOUT_EXCHANGE,"");
+        channel.queueBind(MqConst.DIRECT_QUEUE2,MqConst.DIRECT_EXCHANGE,"error");
+        channel.queueBind(MqConst.DIRECT_QUEUE2,MqConst.DIRECT_EXCHANGE,"info");
+        channel.queueBind(MqConst.DIRECT_QUEUE2,MqConst.DIRECT_EXCHANGE,"warning");
+
 
 
         //定义队列消费者
@@ -28,15 +31,15 @@ public class FanoutConsumer2 {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 String msg = new String(body);
-                System.out.println(" [接收到]  : " + msg + "!");
+                System.out.println("[" + envelope.getRoutingKey() + "] received : " + msg + "!");
 
-                //手动ack
+                //手动ackÎ
                 channel.basicAck(envelope.getDeliveryTag(),true);
             }
         };
 
         //监听队列
-        channel.basicConsume(MqConst.FANOUT_QUEUE2,false,consumer);
+        channel.basicConsume(MqConst.DIRECT_QUEUE2,false,consumer);
 
     }
 }

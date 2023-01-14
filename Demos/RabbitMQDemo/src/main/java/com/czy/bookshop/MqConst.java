@@ -15,6 +15,12 @@ public class MqConst {
     public static final String DIRECT_QUEUE2 = "direct_queue2";
 
 
+    //topic
+    public static final String TOPIC_EXCHANGE = "topic_exchange";
+    public static final String TOPIC_QUEUE1 = "topic_queue1";
+    public static final String TOPIC_QUEUE2 = "topic_queue2";
+
+
 
 
 }

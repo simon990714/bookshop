@@ -10,4 +10,10 @@ public class QianTaiMainTest {
     void test(){
 
     }
+
+    String secret = "";
+    @Test
+    void testJWTEncode(){
+
+    }
 }

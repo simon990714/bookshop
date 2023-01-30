@@ -42,6 +42,7 @@ public class SimpleConsumer {
                     System.out.println("这是  simple  消费者  接受的第一条消息：" + msg);
                 }catch (Exception e){
                     e.printStackTrace();
+
                     //envelope的deliveryTag相当于msg的索引
                     channel.basicNack(envelope.getDeliveryTag(),false,true);//第一个b代表multiply，与tag有关
                 }

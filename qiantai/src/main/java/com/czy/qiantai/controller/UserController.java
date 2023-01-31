@@ -59,10 +59,10 @@ public class UserController {
         Object trueCode = session.getAttribute("codeText");
 
         //检验验证码
-        if (StringUtils.isEmpty(code) || !trueCode.toString().equalsIgnoreCase(code)){
-            model.addAttribute("errorInfo","验证码错误");
-            return "login";
-        }
+//        if (StringUtils.isEmpty(code) || !trueCode.toString().equalsIgnoreCase(code)){
+//            model.addAttribute("errorInfo","验证码错误");
+//            return "login";
+//        }
 
         //检验用户名密码
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)||username.equals("")||password.equals("")){

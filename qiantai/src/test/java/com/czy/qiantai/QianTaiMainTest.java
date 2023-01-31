@@ -3,7 +3,10 @@ package com.czy.qiantai;
 import com.czy.qiantai.utils.JwtUtils;
 import io.jsonwebtoken.*;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.Date;
 
@@ -62,6 +65,18 @@ public class QianTaiMainTest {
 
     }
 
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+    @Test
+    void testMail(){
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom("1107064862@qq.com");
+        simpleMailMessage.setTo("gfdedjbg@163.com");
+        simpleMailMessage.setSubject("这是主题");
+        simpleMailMessage.setText("这是内容");
+        javaMailSender.send(simpleMailMessage);
+    }
 
 
 }

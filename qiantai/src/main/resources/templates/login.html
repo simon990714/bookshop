@@ -37,7 +37,7 @@
           <div class="form-group">
             <label for="code">验证码</label>
             <input type="text" name="code" class="form-control" id="code" placeholder="请输入验证码">
-            <a href=""><img src="" id="imgCode" />点击刷新</a>
+            <a @click.prevent="changeImgCode"><img src="/user/getKaptchaImage" id="imgCode" />点击刷新</a>
           </div>
 
           <button type="submit" class="btn btn-success">登 录</button>
@@ -62,17 +62,12 @@
     }
     ,
     methods: {
-      initTopNineBook(){
-        let _this = this;
-        let url = "/book/topNine?topN=9";
-        $.get(url,function (data) {
-          console.log(data);
-          _this.topNineBook = data;
-        },"json")
+      changeImgCode(){
+        let imgSrc = "/user/getKaptchaImage?date="+new Date().valueOf();
+        document.getElementById("imgCode").src=imgSrc;
       }
     },
     created(){
-      this.initTopNineBook();
     }
 
   });

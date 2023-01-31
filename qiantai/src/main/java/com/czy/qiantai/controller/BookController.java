@@ -61,5 +61,10 @@ public class BookController {
         return bookService.getPageBooksByTypeId(currentPage,pageSize,typeId);
     }
 
+    @RequestMapping("redirectLoginHtml")
+    public String redirectLoginHtml(){
+        return "redirect:/login.html";
+    }
+
 }
 

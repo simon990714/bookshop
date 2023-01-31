@@ -1,6 +1,7 @@
 package com.czy.qiantai.config;
 
 import com.czy.qiantai.interceptors.JwtInterceptor;
+import com.czy.qiantai.interceptors.PermissionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -12,6 +13,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private JwtInterceptor jwtInterceptor;
+    @Autowired
+    private PermissionInterceptor permissionInterceptor;
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
@@ -24,5 +27,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(permissionInterceptor).addPathPatterns("/**/singleBook/**");
     }
 }

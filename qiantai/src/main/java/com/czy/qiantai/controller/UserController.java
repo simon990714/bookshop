@@ -88,5 +88,11 @@ public class UserController {
         return currentAccount;
     }
 
+    @RequestMapping("logout")
+    public String logout(HttpSession session){
+        session.removeAttribute("currentAccount");
+        return "redirect:/";
+    }
+
 }
 

@@ -7,6 +7,8 @@ import com.czy.qiantai.utils.CookieUtils;
 import com.czy.qiantai.utils.JwtUtils;
 import com.google.code.kaptcha.Producer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -38,6 +41,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @RequestMapping("getKaptchaImage")
     public void getKaptchaImage(HttpServletResponse response,HttpSession session) {
@@ -81,10 +87,13 @@ public class UserController {
         }
 
         //登录成功
+//        session.setAttribute("currentAccount",user);
         String token = JwtUtils.createToken(user.getAccount(), 15);
         CookieUtils.setUserToken2Cookie(response,token);
 
-//        session.setAttribute("currentAccount",user);
+        //在redis中也存一份
+        stringRedisTemplate.opsForValue().set(token,user.getAccount(),30, TimeUnit.MINUTES);
+
         return "redirect:/";
     }
 

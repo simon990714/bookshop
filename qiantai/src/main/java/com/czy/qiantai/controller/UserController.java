@@ -3,6 +3,8 @@ package com.czy.qiantai.controller;
 
 import com.czy.qiantai.entity.User;
 import com.czy.qiantai.service.UserService;
+import com.czy.qiantai.utils.CookieUtils;
+import com.czy.qiantai.utils.JwtUtils;
 import com.google.code.kaptcha.Producer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
@@ -55,7 +59,7 @@ public class UserController {
     }
 
     @PostMapping("login")
-    public String login(String username, String password, String code, HttpSession session, Model model){
+    public String login(String username, String password, String code, HttpSession session, Model model , HttpServletResponse response){
         Object trueCode = session.getAttribute("codeText");
 
         //检验验证码
@@ -77,20 +81,25 @@ public class UserController {
         }
 
         //登录成功
-        session.setAttribute("currentAccount",user);
+        String token = JwtUtils.createToken(user.getAccount(), 15);
+        CookieUtils.setUserToken2Cookie(response,token);
+
+//        session.setAttribute("currentAccount",user);
         return "redirect:/";
     }
 
     @RequestMapping("getCurrentAccount")
     @ResponseBody
-    public String getCurrentAccount(HttpSession session){
-        String currentAccount = session.getAttribute("currentAccount").toString();
+    public String getCurrentAccount(HttpSession session,HttpServletRequest request){
+        String currentAccount = CookieUtils.getUserTokenFromCookie(request);;
+//        String currentAccount = session.getAttribute("currentAccount").toString();
         return currentAccount;
     }
 
     @RequestMapping("logout")
-    public String logout(HttpSession session){
-        session.removeAttribute("currentAccount");
+    public String logout(HttpSession session,HttpServletResponse response){
+//        session.removeAttribute("currentAccount");
+        CookieUtils.deleteUserTokenFromCookie(response);
         return "redirect:/";
     }
 

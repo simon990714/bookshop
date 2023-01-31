@@ -51,4 +51,16 @@ public class QianTaiMainTest {
         Object account = body.get("currentAccount");
         System.out.println(account);
     }
+
+    @Test
+    void testJwtUtils(){
+        String token = JwtUtils.createToken("123", 1);
+        System.out.println(token);
+        System.out.println(JwtUtils.parseClaims(token));
+        System.out.println(JwtUtils.getAccountWithoutException(token));
+
+    }
+
+
+
 }

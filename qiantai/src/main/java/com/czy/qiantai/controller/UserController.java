@@ -9,6 +9,8 @@ import com.google.code.kaptcha.Producer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -44,6 +47,10 @@ public class UserController {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
 
     @RequestMapping("getKaptchaImage")
     public void getKaptchaImage(HttpServletResponse response,HttpSession session) {
@@ -110,6 +117,31 @@ public class UserController {
 //        session.removeAttribute("currentAccount");
         CookieUtils.deleteUserTokenFromCookie(response);
         return "redirect:/";
+    }
+
+    @RequestMapping("getEmailCode")
+    @ResponseBody
+    public String getEmailCode(String email){
+        String regex = "^(.+)@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+        if (StringUtils.isEmpty(email) || email.equals("") || !pattern.matcher(email).matches()){
+            return "请输入正确的邮箱";
+        }
+
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("1107064862@qq.com");
+        message.setTo(email);
+        message.setSubject("蜗牛书店验证码");
+        String code = producer.createText();
+        message.setText(code);
+        javaMailSender.send(message);
+        return "ok";
+    }
+
+    @RequestMapping("redirectLoginHtml")
+    public String redirectLoginHtml(){
+        return "redirect:/login.html";
     }
 
 }

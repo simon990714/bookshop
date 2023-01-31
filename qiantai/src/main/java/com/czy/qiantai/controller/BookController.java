@@ -4,9 +4,13 @@ package com.czy.qiantai.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.czy.qiantai.entity.Book;
 import com.czy.qiantai.service.BookService;
+import com.google.code.kaptcha.Producer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -61,10 +66,9 @@ public class BookController {
         return bookService.getPageBooksByTypeId(currentPage,pageSize,typeId);
     }
 
-    @RequestMapping("redirectLoginHtml")
-    public String redirectLoginHtml(){
-        return "redirect:/login.html";
-    }
+
+
+
 
 }
 

@@ -1,9 +1,11 @@
 package com.czy.qiantai.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.czy.qiantai.entity.User;
 import com.czy.qiantai.mapper.UserMapper;
 import com.czy.qiantai.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +18,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+    @Autowired
+    private UserMapper userMapper;
 
+    @Override
+    public User getUserByAccount(String username) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("account",username);
+        User user = userMapper.selectOne(queryWrapper);
+        return user;
+    }
 }

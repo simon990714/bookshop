@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>主页</title>
+  <title>register</title>
   <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
         integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>
@@ -10,72 +10,76 @@
 </head>
 <body>
 
-<!--1.公共头部-->
 <div th:insert="publicHeader"/>
 <script th:src="@{/publicHeader.js}"></script>
 
 
-<!--2.主体内容-->
+
 <div class="container-fluid" id="app" style="margin-top: 180px;margin-bottom: 100px">
 
   <div class="container">
 
     <div class="row">
-      <a href="/register.html">还没有账号?点我立即去注册</a>
+      <a href="/login.html">已有账号?立即去登录</a>
       <div class="col-md-4 col-md-offset-4" style="border: 1px solid #cccccc ;border-radius: 5px;margin-top: 10px">
-        <p style="color: red" th:text="${errorInfo}"></p>
-        <form action="/user/login" method="post">
+        <form>
           <div class="form-group">
-            <label for="exampleInputEmail1">username</label>
-            <input type="text" name="username" class="form-control" id="exampleInputEmail1" placeholder="请输入用户名">
+            <label for="account">用户名:</label>
+            <input type="text" name="username" class="form-control" id="account" placeholder="请输入用户名">
           </div>
           <div class="form-group">
-            <label for="exampleInputPassword1">password</label>
-            <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="请输入密码">
+            <label for="password">密码</label>
+            <input type="password" name="password" class="form-control" id="password" placeholder="请输入密码">
           </div>
-
           <div class="form-group">
-            <label for="code">验证码</label>
-            <input type="text" name="code" class="form-control" id="code" placeholder="请输入验证码">
-            <a @click.prevent="changeImgCode"><img src="/user/getKaptchaImage" id="imgCode" />点击刷新</a>
+            <label for="repass">确认密码:</label>
+            <input type="password" name="repass" class="form-control" id="repass" placeholder="请输入确认密码">
           </div>
 
-          <button type="submit" class="btn btn-success">登 录</button>
+          <div class="form-group">
+            <label for="email">邮箱:</label>
+            <input type="email" name="email" class="form-control" id="email" placeholder="请输入邮箱">
+            <button class="btn btn-primary" >获取验证码</button>
+          </div>
+          <div class="form-group">
+            <label for="emailCode">请输入验证码:</label>
+            <input type="text" name="emailCode" class="form-control" id="emailCode" placeholder="请输入邮箱验证码">
+          </div>
+
+          <button type="button" class="btn btn-success">注册</button>
         </form>
       </div>
     </div>
 
   </div>
 
-
 </div>
 
 <script>
 
-  console.log(".........index...........")
+  console.log(".........register...........")
 
   new Vue({
     el: "#app"
     ,
     data: {
-      topNineBook: []
+
     }
     ,
     methods: {
-      changeImgCode(){
-        let imgSrc = "/user/getKaptchaImage?date="+new Date().valueOf();
-        document.getElementById("imgCode").src=imgSrc;
-      }
-    },
+
+    }
+    ,
     created(){
+
     }
 
   });
 
+
 </script>
 
 
-<!--3.公共底部-->
 <div th:insert="publicFooter"/>
 <script th:src="@{/publicFooter.js}"></script>
 

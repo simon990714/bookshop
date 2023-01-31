@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>主页</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+        integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+
+<!--1.公共头部-->
+<div th:insert="publicHeader"/>
+<script th:src="@{/publicHeader.js}"></script>
+
+
+<!--2.主体内容-->
+<div class="container-fluid" id="app" style="margin-top: 180px;margin-bottom: 100px">
+
+  <div class="container">
+
+    <div class="row">
+      <a href="">还没有账号?点我立即去注册</a>
+      <div class="col-md-4 col-md-offset-4" style="border: 1px solid #cccccc ;border-radius: 5px;margin-top: 10px">
+        <p style="color: red" >errorInfo</p>
+        <form action="" method="post">
+          <div class="form-group">
+            <label for="exampleInputEmail1">username</label>
+            <input type="text" name="username" class="form-control" id="exampleInputEmail1" placeholder="请输入用户名">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">password</label>
+            <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="请输入密码">
+          </div>
+
+          <div class="form-group">
+            <label for="code">验证码</label>
+            <input type="text" name="code" class="form-control" id="code" placeholder="请输入验证码">
+            <a href=""><img src="" id="imgCode" />点击刷新</a>
+          </div>
+
+          <button type="submit" class="btn btn-success">登 录</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+<script>
+
+  console.log(".........index...........")
+
+  new Vue({
+    el: "#app"
+    ,
+    data: {
+      topNineBook: []
+    }
+    ,
+    methods: {
+      initTopNineBook(){
+        let _this = this;
+        let url = "/book/topNine?topN=9";
+        $.get(url,function (data) {
+          console.log(data);
+          _this.topNineBook = data;
+        },"json")
+      }
+    },
+    created(){
+      this.initTopNineBook();
+    }
+
+  });
+
+</script>
+
+
+<!--3.公共底部-->
+<div th:insert="publicFooter"/>
+<script th:src="@{/publicFooter.js}"></script>
+
+
+</body>
+</html>

@@ -6,6 +6,7 @@ import com.czy.qiantai.service.UserService;
 import com.czy.qiantai.utils.CookieUtils;
 import com.czy.qiantai.utils.JwtUtils;
 import com.google.code.kaptcha.Producer;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -50,6 +51,9 @@ public class UserController {
 
     @Autowired
     private JavaMailSender javaMailSender;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
 
     @RequestMapping("getKaptchaImage")
@@ -129,14 +133,15 @@ public class UserController {
         }
 
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("1107064862@qq.com");
-        message.setTo(email);
-        message.setSubject("蜗牛书店验证码");
-        String code = producer.createText();
-        message.setText(code);
-        javaMailSender.send(message);
-        stringRedisTemplate.opsForValue().set(email,code,5,TimeUnit.MINUTES);
+        rabbitTemplate.convertAndSend("sendEmailExchange","sendEmail",email);
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setFrom("1107064862@qq.com");
+//        message.setTo(email);
+//        message.setSubject("蜗牛书店验证码");
+//        String code = producer.createText();
+//        message.setText(code);
+//        javaMailSender.send(message);
+//        stringRedisTemplate.opsForValue().set(email,code,5,TimeUnit.MINUTES);
         return "ok";
     }
 

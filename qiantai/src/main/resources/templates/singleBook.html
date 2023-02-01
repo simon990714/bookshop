@@ -44,7 +44,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <a class="btn btn-success" href="javascript:void(0)">加入购物车</a>
+        <a class="btn btn-success" href="javascript:void(0)"  @click.prevent="addToCart(bookId)">加入购物车</a>
       </div>
     </div>
 
@@ -61,9 +61,21 @@
     el: "#app"
     ,
     data: {
+      bookId: [[${book.id}]]
     }
     ,
     methods: {
+      addToCart(bookId){
+        console.log(bookId)
+        $.get("/mycart/add?bookId="+bookId,function (data) {
+          console.log(data);
+          if (data == "ok"){
+            alert("添加购物车成功！")
+          }else{
+            alert("添加购物车失败！")
+          }
+        })
+      }
     },
     created(){
     }

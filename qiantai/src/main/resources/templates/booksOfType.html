@@ -40,7 +40,7 @@
                         <p>价格:<span v-text="book.price"></span></p>
                         <p>
                             <a class="btn btn-primary" :href="'/book/singleBook?bookId=' + book.id">详情</a> &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a class="btn btn-success" href="">加入购物车</a>
+                            <a class="btn btn-success" @click.prevent="addToCart(book.id)">加入购物车</a>
                         </p>
                     </div>
                 </div>
@@ -119,6 +119,17 @@
                 }
                 this.currentPage = pageNum;
                 this.initTopNineBook();
+            },
+            addToCart(bookId){
+                console.log(bookId)
+                $.get("/mycart/add?bookId="+bookId,function (data) {
+                    console.log(data);
+                    if (data == "ok"){
+                        alert("添加购物车成功！")
+                    }else{
+                        alert("添加购物车失败！")
+                    }
+                })
             }
 
         },

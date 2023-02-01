@@ -24,7 +24,7 @@
         <table class="table">
           <tr>
             <th>
-              <input type="checkbox" id="cartCheck" />
+              <input type="checkbox" id="cartCheck" @click="checkAll" />
             </th>
             <th>图书名称</th>
             <th>图书图片</th>
@@ -37,7 +37,7 @@
 
           <tr v-for="cartItem in cartItems" >
             <td>
-              <input type="checkbox" name="cartItemCheck" />
+              <input type="checkbox" name="cartItemCheck" @change="checkItems" />
             </td>
             <td style="height:60px;line-height: 60px" v-text="cartItem.bookName">图书名称</td>
             <td>
@@ -100,8 +100,31 @@
         $.get("/mycart/updateItemNum",params,function (data) {
           _this.initCartItems();
         })
+      },
+      checkAll(){
+        //先获取全选的状态
+        let allCheck = $("#cartCheck");
+        let allCheckFlag = allCheck.prop("checked");
 
+        //把所有的框改为选中
+        let allItemCheck = $("input[name='cartItemCheck']");
+        allItemCheck.each(function (){
+          $(this).prop("checked",allCheckFlag);
+        })
+      },
+      checkItems(){
+        let allCheck = $("#cartCheck");
+        let allCheckFlag = true;
+        let allItemCheck = $("input[name='cartItemCheck']");
+
+        allItemCheck.each(function () {
+          if (!$(this).prop("checked")){
+            allCheckFlag = false;
+          }
+        })
+        allCheck.prop("checked",allCheckFlag);
       }
+
     }
     ,
     created(){

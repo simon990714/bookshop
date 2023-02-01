@@ -33,21 +33,23 @@
             <th>小计</th>
             <th>操作</th>
           </tr>
-          <tr >
+
+
+          <tr v-for="cartItem in cartItems" >
             <td>
               <input type="checkbox" name="cartItemCheck" />
             </td>
-            <td style="height:60px;line-height: 60px">图书名称</td>
+            <td style="height:60px;line-height: 60px" v-text="cartItem.bookName">图书名称</td>
             <td>
-              <img src="" style="width: 60px;height: 60px; border-radius: 50%"/>
+              <img :src="cartItem.imgSrc" style="width: 60px;height: 60px; border-radius: 50%"/>
             </td>
-            <td style="height:60px;line-height: 60px">图书单价</td>
+            <td style="height:60px;line-height: 60px" v-text="cartItem.bookPrice">图书单价</td>
             <td style="height:60px;line-height: 60px">
               <a class="btn btn-default btn-sm" >一</a>
-              &nbsp;<span>5</span>&nbsp;
+              &nbsp;<span v-text="cartItem.itemNum"></span>&nbsp;
               <a class="btn btn-default btn-sm" >十</a>
             </td>
-            <td style="height:60px;line-height: 60px">图书小计</td>
+            <td style="height:60px;line-height: 60px" v-text="cartItem.sumPrice">图书小计</td>
             <td style="height:60px;line-height: 60px">
               <a class="btn btn-danger">删除</a>
             </td>
@@ -78,15 +80,21 @@
     el: "#app"
     ,
     data: {
-
+      cartItems: []
     }
     ,
     methods: {
-
+      initCartItems(){
+        let _this = this;
+        $.get("/mycart/getAllItems",function (data) {
+          console.log(data);
+          _this.cartItems = data;
+        })
+      }
     }
     ,
     created(){
-
+      this.initCartItems();
     }
 
   });

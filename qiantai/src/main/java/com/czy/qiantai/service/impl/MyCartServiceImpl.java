@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Collection;
 
 @Service
 public class MyCartServiceImpl implements MyCartService {
@@ -48,4 +49,10 @@ public class MyCartServiceImpl implements MyCartService {
         //储存到redis
         hashOperations.put(userId+"",bookId+"",cartItem);
         }
+
+    @Override
+    public Collection<Object> getAllItems(Long userId) {
+        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        return hashOperations.values(""+userId);
+    }
 }

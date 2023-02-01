@@ -3,6 +3,8 @@ package com.czy.qiantai.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.czy.qiantai.entity.User;
 
+import java.util.Collection;
+
 /**
  * <p>
  *  服务类
@@ -14,4 +16,6 @@ import com.czy.qiantai.entity.User;
 public interface MyCartService {
 
     void addCart(Long userId , Long bookId);
+
+    Collection<Object> getAllItems(Long userId);
 }

@@ -14,4 +14,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface UserService extends IService<User> {
 
     User getUserByAccount(String username);
+
+    User getUserByEmail(String email);
+
+    int reg(String account, String password, String email);
 }

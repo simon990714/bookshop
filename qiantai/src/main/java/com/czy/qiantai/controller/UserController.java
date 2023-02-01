@@ -136,6 +136,7 @@ public class UserController {
         String code = producer.createText();
         message.setText(code);
         javaMailSender.send(message);
+        stringRedisTemplate.opsForValue().set(email,code,5,TimeUnit.MINUTES);
         return "ok";
     }
 
@@ -144,5 +145,42 @@ public class UserController {
         return "redirect:/login.html";
     }
 
+    @RequestMapping("reg")
+    public String reg(String username , String password , String repass , String email , String emailCode , Model model){
+        //非空验证
+        if (StringUtils.isEmpty(email) || StringUtils.isEmpty(emailCode) || StringUtils.isEmpty(username) || StringUtils.isEmpty(password) || StringUtils.isEmpty(repass)){
+            model.addAttribute("errorInfo","有必填项未填");
+            return "register";
+        }
+        //校验邮箱是否占用
+        if (userService.getUserByEmail(email) != null){
+            model.addAttribute("errorInfo","该邮箱已被使用");
+            return "register";
+        }
+        //检验验证码
+        String redisCode = stringRedisTemplate.opsForValue().get(email);
+        if (!emailCode.equalsIgnoreCase(redisCode)){
+            model.addAttribute("errorInfo","验证码错误");
+            return "register";
+        }
+        //验证账号是否重复
+        if (userService.getUserByAccount(username) != null){
+            model.addAttribute("errorInfo","账号名重复");
+            return "register";
+        }
+        //验证两次密码输入是否一致
+        if (!password.equals(repass)){
+            model.addAttribute("errorInfo","密码输入不一致");
+            return "register";
+        }
+
+        //注册成功，写入数据库
+        int rows = userService.reg(username, password, email);
+        if (rows != 1){
+            model.addAttribute("errorInfo","注册失败");
+            return "register";
+        }
+        return "redirect:/login.html";
+    }
 }
 

@@ -163,22 +163,26 @@ public class UserController {
             model.addAttribute("errorInfo","验证码错误");
             return "register";
         }
-        //验证账号是否重复
-        if (userService.getUserByAccount(username) != null){
-            model.addAttribute("errorInfo","账号名重复");
-            return "register";
-        }
-        //验证两次密码输入是否一致
-        if (!password.equals(repass)){
-            model.addAttribute("errorInfo","密码输入不一致");
-            return "register";
-        }
 
-        //注册成功，写入数据库
-        int rows = userService.reg(username, password, email);
-        if (rows != 1){
-            model.addAttribute("errorInfo","注册失败");
-            return "register";
+        //username.intern() 强制去字符串常量池里获取对象
+        synchronized (username.intern()) {
+            //验证账号是否重复
+            if (userService.getUserByAccount(username) != null) {
+                model.addAttribute("errorInfo", "账号名重复");
+                return "register";
+            }
+            //验证两次密码输入是否一致
+            if (!password.equals(repass)) {
+                model.addAttribute("errorInfo", "密码输入不一致");
+                return "register";
+            }
+
+            //注册成功，写入数据库
+            int rows = userService.reg(username, password, email);
+            if (rows != 1) {
+                model.addAttribute("errorInfo", "注册失败");
+                return "register";
+            }
         }
         return "redirect:/login.html";
     }

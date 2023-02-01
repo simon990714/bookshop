@@ -18,4 +18,6 @@ public interface MyCartService {
     void addCart(Long userId , Long bookId);
 
     Collection<Object> getAllItems(Long userId);
+
+    void updateItemNum(Long userId, Long bookId, Integer itemNum);
 }

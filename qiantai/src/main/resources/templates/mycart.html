@@ -45,13 +45,13 @@
             </td>
             <td style="height:60px;line-height: 60px" v-text="cartItem.bookPrice">图书单价</td>
             <td style="height:60px;line-height: 60px">
-              <a class="btn btn-default btn-sm" >一</a>
+              <a class="btn btn-default btn-sm" @click.prevent="updateItemNum(cartItem.bookId,-1)" >一</a>
               &nbsp;<span v-text="cartItem.itemNum"></span>&nbsp;
-              <a class="btn btn-default btn-sm" >十</a>
+              <a class="btn btn-default btn-sm" @click.prevent="updateItemNum(cartItem.bookId,+1)" >十</a>
             </td>
             <td style="height:60px;line-height: 60px" v-text="cartItem.sumPrice">图书小计</td>
             <td style="height:60px;line-height: 60px">
-              <a class="btn btn-danger">删除</a>
+              <a class="btn btn-danger" @click.prevent="updateItemNum(cartItem.bookId,0)">删除</a>
             </td>
           </tr>
         </table>
@@ -90,6 +90,17 @@
           console.log(data);
           _this.cartItems = data;
         })
+      },
+      updateItemNum(bookId,itemNum){
+        let _this = this;
+        let params = {
+          bookId: bookId,
+          itemNum: itemNum
+        }
+        $.get("/mycart/updateItemNum",params,function (data) {
+          _this.initCartItems();
+        })
+
       }
     }
     ,

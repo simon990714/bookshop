@@ -56,6 +56,19 @@ public class MycartController {
     }
 
 
+    @RequestMapping("updateItemNum")
+    @ResponseBody
+    public void updateItemNum(HttpServletRequest request,Long bookId,Integer itemNum) {
+        //获取当前用户id
+        String userTokenFromCookie = CookieUtils.getUserTokenFromCookie(request);
+        String account = JwtUtils.getAccount(userTokenFromCookie);
+        User userByAccount = userService.getUserByAccount(account);
+        myCartService.updateItemNum(userByAccount.getId(),bookId,itemNum);
+    }
+
+
+
+
 
 }
 

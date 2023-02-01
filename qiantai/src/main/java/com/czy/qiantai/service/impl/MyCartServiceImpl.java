@@ -55,4 +55,36 @@ public class MyCartServiceImpl implements MyCartService {
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
         return hashOperations.values(""+userId);
     }
+
+    @Override
+    public void updateItemNum(Long userId, Long bookId, Integer itemNum) {
+        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        CartItem cartItem = (CartItem) hashOperations.get("" + userId, "" + bookId);
+        Integer currentItemNum = cartItem.getItemNum();
+
+        //1.itemNum = +1
+        if (itemNum == 1){
+            cartItem.setItemNum(cartItem.getItemNum()+1);
+            cartItem.setSumPrice(cartItem.getSumPrice().add(cartItem.getBookPrice()));
+            hashOperations.put(userId+"",bookId+"",cartItem);
+            return;
+        }
+        //2.itemNum = -1
+        if (itemNum == -1){
+            //item不超过1，则为删除
+            if (currentItemNum <= 1){
+                hashOperations.delete(userId+"",bookId+"");
+            }else {
+                cartItem.setItemNum(cartItem.getItemNum()-1);
+                cartItem.setSumPrice(cartItem.getSumPrice().subtract(cartItem.getBookPrice()));
+                hashOperations.put(userId+"",bookId+"",cartItem);
+            }
+            return;
+        }
+        //3.itemNum = 0，删除
+        if (itemNum == 0){
+            hashOperations.delete(userId+"",bookId+"");
+        }
+
+    }
 }

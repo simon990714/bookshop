@@ -73,7 +73,14 @@
         },"json")
       },
       addToCart(bookId){
-        console.log(bookId)
+        //判断是否登陆
+        console.log(publicHeader._data.currentAccount);
+        if (!publicHeader._data.currentAccount){
+          alert("请先登陆！")
+          location.href="/login.html"
+        }
+
+        //调用后端，添加购物车
         $.get("/mycart/add?bookId="+bookId,function (data) {
           console.log(data);
           if (data == "ok"){

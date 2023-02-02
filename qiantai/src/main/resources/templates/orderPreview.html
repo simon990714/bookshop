@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>orderPreview</title>
   <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
   <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"-->
   <!--          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>-->
   <!--    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>-->
@@ -84,27 +85,24 @@
           <form>
             <div class="form-group">
               <label for="provinceId">省</label>
-              <select class="form-control" id="provinceId" placeholder="请选择省份">
-                <option value="">请选择省份</option>
-                <option value="">A</option>
-                <option value="">B</option>
+              <select class="form-control" id="provinceId" placeholder="请选择省份" v-model="provinceId" @change="refreshCityList">
+                <option value="-1">请选择省份</option>
+                <option v-for="province in provinceList" v-text="province.name" :value="province.id" >A</option>
               </select>
             </div>
             <div class="form-group">
               <label for="cityId">市</label>
-              <select class="form-control" id="cityId" placeholder="请选择城市">
-                <option value="">请选择城市</option>
-                <option value="">A</option>
-                <option value="">B</option>
+              <select class="form-control" id="cityId" placeholder="请选择城市" v-model="cityId" @change="refreshAreaList" >
+                <option value="-1">请选择城市</option>
+                <option v-for="city in cityList" v-text="city.name" :value="city.id">A</option>
               </select>
             </div>
 
             <div class="form-group">
               <label for="areaId">区</label>
-              <select class="form-control" id="areaId" placeholder="请选择区域">
-                <option value="">请选择区域</option>
-                <option value="">A</option>
-                <option value="">B</option>
+              <select class="form-control" id="areaId" v-model="areaId" placeholder="请选择区域">
+                <option value="-1">请选择区域</option>
+                <option v-for="area in areaList" v-text="area.name" :value="area.id">A</option>
               </select>
             </div>
 
@@ -160,6 +158,12 @@
       totalPrice: "0.00",
       addressList: [],
       defaultAddressId: -1,
+      provinceList: [],
+      provinceId: -1,
+      cityList: [],
+      cityId: -1,
+      areaList: [],
+      areaId: -1,
     }
     ,
     methods: {
@@ -170,7 +174,8 @@
           _this.cartItems = data.cartItems;
           _this.totalPrice = data.totalPrice;
         })
-      },
+      }
+      ,
       initAddressList(){
         let _this = this;
         $.get("/address/allAddress",function (data) {
@@ -184,16 +189,44 @@
               console.log(_this.defaultAddressId);
             }
           }
-
         })
-
-
       }
+      ,
+      initProvinceList(){
+        let _this = this;
+        $.get("/china/queryList?pId=0",function (data) {
+          console.log(data);
+          _this.provinceList = data;
+        })
+      }
+      ,
+      refreshCityList(){
+        let _this = this;
+        $.get("/china/queryList?pId="+this.provinceId,function (data) {
+          console.log(data);
+          _this.cityList = data;
+        });
+        this.areaId=-1;
+        this.cityId=-1;
+      }
+      ,
+      refreshAreaList(){
+        let _this = this;
+        $.get("/china/queryList?pId="+this.cityId,function (data) {
+          console.log(data);
+          _this.areaList = data;
+        });
+        this.areaId=-1;
+      }
+      ,
+
+
     }
     ,
     created(){
       this.initCartOrder();
       this.initAddressList();
+      this.initProvinceList();
     }
 
   });

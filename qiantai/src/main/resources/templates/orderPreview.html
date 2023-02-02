@@ -22,8 +22,8 @@
   <div class="container">
     <div class="row" >
       <div class="col-md-8">
-        <select class="form-control" name="address">
-          <option v-for="address in addressList" v-text="address.province + address.city + address.area + address.detailAddress + '\t\t' + address.tel + '\t\t' + address.reciver">地址1</option>
+        <select class="form-control" name="address" v-model="defaultAddressId">
+          <option  v-for="a in addressList" :value="a.id">{{a.province}}{{a.city}}{{a.area}}{{a.detailAddress}}  {{a.tel}}   {{a.reciver}}</option>
         </select>
       </div>
       <div class="col-md-4">
@@ -156,7 +156,8 @@
       bookIds: [[${bookIds}]],
       cartItems: [],
       totalPrice: "0.00",
-      addressList: []
+      addressList: [],
+      defaultAddressId: -1,
     }
     ,
     methods: {
@@ -173,7 +174,18 @@
         $.get("/address/allAddress",function (data) {
           console.log(data);
           _this.addressList = data;
+
+          //选中默认地址
+          for (let address of data){
+            if (address.isDefault == '1'){
+              _this.defaultAddressId = address.id;
+              console.log(_this.defaultAddressId);
+            }
+          }
+
         })
+
+
       }
     }
     ,

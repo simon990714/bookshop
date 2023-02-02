@@ -64,7 +64,7 @@
       </div>
 
       <div class="col-md-6">
-        <button class="btn btn-success" >结算</button>
+        <button class="btn btn-success" @click="toOrderPreview" >结算</button>
       </div>
     </div>
 
@@ -149,8 +149,23 @@
           console.log(data);
           _this.totalPrice = data;
         })
-
-
+      },
+      toOrderPreview(){
+        let allItemCheck = $("input[name='cartItemCheck']");
+        let bookIds = []
+        let _this = this;
+        allItemCheck.each(function () {
+          if ($(this).prop("checked")){
+            bookIds.push($(this).val())
+          }
+        })
+        console.log(bookIds);
+        //如果监测到全不选，则不进入后端，弹窗报错
+        if (bookIds.length < 1){
+          alert("请选择您要结算的商品！")
+          return;
+        }
+        location.href="/mycart/toOrderPreview?bookIds="+bookIds;
       }
 
     }

@@ -5,9 +5,12 @@ import com.czy.qiantai.entity.User;
 import com.czy.qiantai.service.MyCartService;
 import com.czy.qiantai.service.UserService;
 import com.czy.qiantai.utils.CookieUtils;
+import com.czy.qiantai.utils.JSONUtils;
 import com.czy.qiantai.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -79,8 +82,23 @@ public class MycartController {
         User userByAccount = userService.getUserByAccount(account);
 
         return myCartService.calTotalPrice(userByAccount.getId(),bookIds);
+    }
+
+    @GetMapping("toOrderPreview")
+    //get请求的话不需要   @RequestParam("bookIds[]")
+    public String toOrderPreview(Model model, Long[] bookIds) {
+        //将bookIds转换成json字符串，否则前端取到的toString，即地址
+        String bookIdsJson = JSONUtils.createJson(bookIds);
+        model.addAttribute("bookIds",bookIdsJson);
+        /*
+        System.out.println(bookIds);//地址
+        System.out.println(bookIdsJson);//【】字符串
+        */
+        return "orderPreview";
 
     }
+
+
 
 
 

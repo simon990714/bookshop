@@ -100,6 +100,7 @@
         }
         $.get("/mycart/updateItemNum",params,function (data) {
           _this.initCartItems();
+          _this.calTotalPrice();
         })
       },
       checkAll(){

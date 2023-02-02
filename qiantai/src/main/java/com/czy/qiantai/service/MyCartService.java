@@ -3,6 +3,7 @@ package com.czy.qiantai.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.czy.qiantai.entity.User;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 
 /**
@@ -20,4 +21,6 @@ public interface MyCartService {
     Collection<Object> getAllItems(Long userId);
 
     void updateItemNum(Long userId, Long bookId, Integer itemNum);
+
+    BigDecimal calTotalPrice(Long userId, Long[] bookIds);
 }

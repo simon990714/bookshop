@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class MyCartServiceImpl implements MyCartService {
@@ -86,5 +87,23 @@ public class MyCartServiceImpl implements MyCartService {
             hashOperations.delete(userId+"",bookId+"");
         }
 
+    }
+
+    @Override
+    public BigDecimal calTotalPrice(Long userId, Long[] bookIds) {
+        List<Object> values = redisTemplate.opsForHash().values(userId + "");
+
+        BigDecimal bigDecimal = new BigDecimal("0.00");
+        //双层循环，如果values中的id和选中的id一样，进行累加
+        for (Object value : values) {
+            CartItem cartItem = (CartItem) value;
+            for (Long bookId : bookIds) {
+                if (cartItem.getBookId().equals(bookId)){
+                    bigDecimal = bigDecimal.add(cartItem.getSumPrice());
+                    break;
+                }
+            }
+        }
+        return bigDecimal;
     }
 }

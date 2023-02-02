@@ -9,9 +9,11 @@ import com.czy.qiantai.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.Collection;
 
 /**
@@ -65,6 +67,22 @@ public class MycartController {
         User userByAccount = userService.getUserByAccount(account);
         myCartService.updateItemNum(userByAccount.getId(),bookId,itemNum);
     }
+
+
+
+    @RequestMapping("calTotalPrice")
+    @ResponseBody
+    public BigDecimal calTotalPrice(HttpServletRequest request,@RequestParam("bookIds[]") Long[] bookIds) {
+        //获取当前用户id
+        String userTokenFromCookie = CookieUtils.getUserTokenFromCookie(request);
+        String account = JwtUtils.getAccount(userTokenFromCookie);
+        User userByAccount = userService.getUserByAccount(account);
+
+        return myCartService.calTotalPrice(userByAccount.getId(),bookIds);
+
+    }
+
+
 
 
 

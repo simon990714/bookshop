@@ -37,7 +37,7 @@
 
           <tr v-for="cartItem in cartItems" >
             <td>
-              <input type="checkbox" name="cartItemCheck" @change="checkItems" />
+              <input type="checkbox" name="cartItemCheck" @change="checkItems" :value="cartItem.bookId" />
             </td>
             <td style="height:60px;line-height: 60px" v-text="cartItem.bookName">图书名称</td>
             <td>
@@ -60,7 +60,7 @@
 
     <div class="row">
       <div class="col-md-6">
-        <b> 总价(元): 0.00 </b>
+        <b> 总价(元): {{totalPrice}} </b>
       </div>
 
       <div class="col-md-6">
@@ -80,7 +80,8 @@
     el: "#app"
     ,
     data: {
-      cartItems: []
+      cartItems: [],
+      totalPrice: "0.00"
     }
     ,
     methods: {
@@ -111,6 +112,7 @@
         allItemCheck.each(function (){
           $(this).prop("checked",allCheckFlag);
         })
+        this.calTotalPrice();
       },
       checkItems(){
         let allCheck = $("#cartCheck");
@@ -123,6 +125,31 @@
           }
         })
         allCheck.prop("checked",allCheckFlag);
+        this.calTotalPrice();
+      },
+      calTotalPrice(){
+        let allItemCheck = $("input[name='cartItemCheck']");
+        let bookIds = []
+        let _this = this;
+        allItemCheck.each(function () {
+          if ($(this).prop("checked")){
+            bookIds.push($(this).val())
+          }
+        })
+        console.log(bookIds);
+
+        //如果监测到全不选，则不进入后端，直接置0
+        if (bookIds.length < 1){
+          _this.totalPrice = "0.00";
+          return;
+        }
+
+        $.get("/mycart/calTotalPrice",{bookIds: bookIds},function (data) {
+          console.log(data);
+          _this.totalPrice = data;
+        })
+
+
       }
 
     }

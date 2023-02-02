@@ -23,8 +23,7 @@
     <div class="row" >
       <div class="col-md-8">
         <select class="form-control" name="address">
-          <option>地址1</option>
-          <option>地址2</option>
+          <option v-for="address in addressList" v-text="address.province + address.city + address.area + address.detailAddress + '\t\t' + address.tel + '\t\t' + address.reciver">地址1</option>
         </select>
       </div>
       <div class="col-md-4">
@@ -156,7 +155,8 @@
     data: {
       bookIds: [[${bookIds}]],
       cartItems: [],
-      totalPrice: "0.00"
+      totalPrice: "0.00",
+      addressList: []
     }
     ,
     methods: {
@@ -167,11 +167,19 @@
           _this.cartItems = data.cartItems;
           _this.totalPrice = data.totalPrice;
         })
+      },
+      initAddressList(){
+        let _this = this;
+        $.get("/address/allAddress",function (data) {
+          console.log(data);
+          _this.addressList = data;
+        })
       }
     }
     ,
     created(){
       this.initCartOrder();
+      this.initAddressList();
     }
 
   });

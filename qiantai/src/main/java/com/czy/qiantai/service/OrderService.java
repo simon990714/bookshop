@@ -2,6 +2,7 @@ package com.czy.qiantai.service;
 
 import com.czy.qiantai.entity.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.czy.qiantai.vo.CartOrder;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface OrderService extends IService<Order> {
 
+    CartOrder getCartOrder(Long id, Long[] bookIds);
 }

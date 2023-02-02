@@ -18,7 +18,130 @@
 <div class="container-fluid" id="app" style="margin-top: 180px;margin-bottom: 100px">
 
 
-  orderPreview
+
+  <div class="container">
+    <div class="row" >
+      <div class="col-md-8">
+        <select class="form-control" name="address">
+          <option>地址1</option>
+          <option>地址2</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">新增地址</button>
+      </div>
+    </div>
+  </div>
+  <br/>
+
+  <div class="row">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table">
+            <tr>
+              <th>图书名称</th>
+              <th>图书图片</th>
+              <th>图书单价(元)</th>
+              <th>购买数量</th>
+              <th>小计</th>
+            </tr>
+            <tr v-for="cartItem in cartItems">
+              <td  style="height:60px;line-height: 60px" v-text="cartItem.bookName">图书名称</td>
+              <td>
+                <img :src="cartItem.imgSrc" style="width: 60px;height: 60px; border-radius: 50%"/>
+              </td>
+              <td style="height:60px;line-height: 60px" v-text="cartItem.bookPrice">图书单价</td>
+              <td style="height:60px;line-height: 60px" v-text="cartItem.itemNum">购买数量</td>
+              <td style="height:60px;line-height: 60px" v-text="cartItem.sumPrice">图书小计</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <b> 总价(元): {{totalPrice}} </b>
+        </div>
+
+        <div class="col-md-6">
+          <button class="btn btn-success" >提交订单</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">新增地址</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="provinceId">省</label>
+              <select class="form-control" id="provinceId" placeholder="请选择省份">
+                <option value="">请选择省份</option>
+                <option value="">A</option>
+                <option value="">B</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="cityId">市</label>
+              <select class="form-control" id="cityId" placeholder="请选择城市">
+                <option value="">请选择城市</option>
+                <option value="">A</option>
+                <option value="">B</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="areaId">区</label>
+              <select class="form-control" id="areaId" placeholder="请选择区域">
+                <option value="">请选择区域</option>
+                <option value="">A</option>
+                <option value="">B</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="detailAddress">详细地址</label>
+              <input type="text" class="form-control" id="detailAddress" placeholder="请输入详细地址">
+            </div>
+
+            <div class="form-group">
+              <label for="tel">手机号</label>
+              <input type="text" class="form-control" id="tel" placeholder="请输入手机号">
+            </div>
+
+            <div class="form-group">
+              <label for="reciever">收件人姓名</label>
+              <input type="text" class="form-control" id="reciever" placeholder="请输入收件人">
+            </div>
+            <div class="form-group">
+              <label for="code">邮编</label>
+              <input type="text" class="form-control" id="code" placeholder="请输入邮编">
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" id="isDefault" > 是否默认
+              </label>
+            </div>
+          </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 
 
 </div>
@@ -31,15 +154,24 @@
     el: "#app"
     ,
     data: {
-      bookIds: [[${bookIds}]]
+      bookIds: [[${bookIds}]],
+      cartItems: [],
+      totalPrice: "0.00"
     }
     ,
     methods: {
-
+      initCartOrder(){
+        let _this = this;
+        $.get("/order/getAllItems",{bookIds: this.bookIds},function (data) {
+          console.log(data);
+          _this.cartItems = data.cartItems;
+          _this.totalPrice = data.totalPrice;
+        })
+      }
     }
     ,
     created(){
-
+      this.initCartOrder();
     }
 
   });

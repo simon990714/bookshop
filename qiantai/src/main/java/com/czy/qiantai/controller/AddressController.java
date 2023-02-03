@@ -8,7 +8,7 @@ import com.czy.qiantai.service.UserService;
 import com.czy.qiantai.utils.CookieUtils;
 import com.czy.qiantai.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +46,18 @@ public class AddressController {
         User currentUser = userService.getUserByAccount(currentUserAccount);
 
         return currentUser;
+    }
+
+    @PostMapping("saveAddress")
+    public String saveAddress(Address address, HttpServletRequest request){
+        User currentUser = getCurrentUser(request);
+        address.setUserId(currentUser.getId());
+        address.setStatus("1");
+        int rows = addressService.saveAddress(address);
+        if (rows == 1){
+            return "ok";
+        }
+        return "添加失败！";
     }
 }
 

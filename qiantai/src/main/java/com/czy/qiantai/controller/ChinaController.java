@@ -5,6 +5,7 @@ import com.czy.qiantai.entity.China;
 import com.czy.qiantai.service.ChinaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +31,7 @@ public class ChinaController {
     public List<China> queryList(Long pId){
         return chinaService.queryList(pId);
     }
+
 
 
 }

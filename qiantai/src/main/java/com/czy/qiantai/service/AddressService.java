@@ -16,4 +16,6 @@ import java.util.List;
 public interface AddressService extends IService<Address> {
 
     List<Address> getAddressByAccount(Long userId);
+
+    int saveAddress(Address address);
 }

@@ -29,4 +29,9 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> impl
         queryWrapper.eq("userId",userId);
         return addressMapper.selectList(queryWrapper);
     }
+
+    @Override
+    public int saveAddress(Address address) {
+        return addressMapper.insert(address);
+    }
 }

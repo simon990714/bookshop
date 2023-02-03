@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>orderPreview</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+  <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"-->
+  <!--          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>-->
+  <!--    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>-->
+  <link rel="stylesheet" th:href="@{/bootstrap.min.css}" />
+  <script th:src="@{/vue.js}"></script>
+</head>
+<body>
+
+<div th:insert="publicHeader"/>
+<script th:src="@{/publicHeader.js}"></script>
+
+
+
+<div class="container-fluid" id="app" style="margin-top: 180px;margin-bottom: 100px">
+
+
+
+  <div class="container">
+    <div class="row" >
+      <div class="col-md-8">
+        <select class="form-control" name="address" v-model="defaultAddressId">
+          <option  v-for="a in addressList" :value="a.id">{{a.province}}{{a.city}}{{a.area}}{{a.detailAddress}}  {{a.tel}}   {{a.reciver}}</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">新增地址</button>
+      </div>
+    </div>
+  </div>
+  <br/>
+
+  <div class="row">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table">
+            <tr>
+              <th>图书名称</th>
+              <th>图书图片</th>
+              <th>图书单价(元)</th>
+              <th>购买数量</th>
+              <th>小计</th>
+            </tr>
+            <tr v-for="cartItem in cartItems">
+              <td  style="height:60px;line-height: 60px" v-text="cartItem.bookName">图书名称</td>
+              <td>
+                <img :src="cartItem.imgSrc" style="width: 60px;height: 60px; border-radius: 50%"/>
+              </td>
+              <td style="height:60px;line-height: 60px" v-text="cartItem.bookPrice">图书单价</td>
+              <td style="height:60px;line-height: 60px" v-text="cartItem.itemNum">购买数量</td>
+              <td style="height:60px;line-height: 60px" v-text="cartItem.sumPrice">图书小计</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <b> 总价(元): {{totalPrice}} </b>
+        </div>
+
+        <div class="col-md-6">
+          <button class="btn btn-success" >提交订单</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">新增地址</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="provinceId">省</label>
+              <select class="form-control" id="provinceId" placeholder="请选择省份" v-model="provinceId" @change="refreshCityList">
+                <option value="-1">请选择省份</option>
+                <option v-for="province in provinceList" v-text="province.name" :value="province.id" >A</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="cityId">市</label>
+              <select class="form-control" id="cityId" placeholder="请选择城市" v-model="cityId" @change="refreshAreaList" >
+                <option value="-1">请选择城市</option>
+                <option v-for="city in cityList" v-text="city.name" :value="city.id">A</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="areaId">区</label>
+              <select class="form-control" id="areaId" v-model="areaId" placeholder="请选择区域">
+                <option value="-1">请选择区域</option>
+                <option v-for="area in areaList" v-text="area.name" :value="area.id">A</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="detailAddress">详细地址</label>
+              <input type="text" v-model="detailAddress" class="form-control" id="detailAddress" placeholder="请输入详细地址">
+            </div>
+
+            <div class="form-group">
+              <label for="tel">手机号</label>
+              <input type="text" v-model="tel" class="form-control" id="tel" placeholder="请输入手机号">
+            </div>
+
+            <div class="form-group">
+              <label for="reciever">收件人姓名</label>
+              <input type="text" v-model="reciver" class="form-control" id="reciever" placeholder="请输入收件人">
+            </div>
+            <div class="form-group">
+              <label for="code">邮编</label>
+              <input type="text" v-model="emailCode" class="form-control" id="code" placeholder="请输入邮编">
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" id="isDefault" v-model="isDefault" > 是否默认
+              </label>
+            </div>
+          </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary" @click.prevent="saveAddress">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</div>
+
+<script>
+
+  console.log(".........orderPreview...........")
+
+  new Vue({
+    el: "#app"
+    ,
+    data: {
+      bookIds: [[${bookIds}]],
+      cartItems: [],
+      totalPrice: "0.00",
+      addressList: [],
+      defaultAddressId: -1,
+      provinceList: [],
+      provinceId: -1,
+      cityList: [],
+      cityId: -1,
+      areaList: [],
+      areaId: -1,
+      detailAddress: '',
+      tel: '',
+      reciver: '',
+      emailCode: '',
+      userId: -1,
+      status: '',
+      isDefault: ''
+    }
+    ,
+    methods: {
+      initCartOrder(){
+        let _this = this;
+        $.get("/order/getAllItems",{bookIds: this.bookIds},function (data) {
+          console.log(data);
+          _this.cartItems = data.cartItems;
+          _this.totalPrice = data.totalPrice;
+        })
+      }
+      ,
+      initAddressList(){
+        let _this = this;
+        $.get("/address/allAddress",function (data) {
+          console.log(data);
+          _this.addressList = data;
+
+          //选中默认地址
+          for (let address of data){
+            if (address.isDefault == '1'){
+              _this.defaultAddressId = address.id;
+              console.log(_this.defaultAddressId);
+            }
+          }
+        })
+      }
+      ,
+      initProvinceList(){
+        let _this = this;
+        $.get("/china/queryList?pId=0",function (data) {
+          console.log(data);
+          _this.provinceList = data;
+        })
+      }
+      ,
+      refreshCityList(){
+        let _this = this;
+        $.get("/china/queryList?pId="+this.provinceId,function (data) {
+          console.log(data);
+          _this.cityList = data;
+        });
+        this.areaId=-1;
+        this.cityId=-1;
+      }
+      ,
+      refreshAreaList(){
+        let _this = this;
+        $.get("/china/queryList?pId="+this.cityId,function (data) {
+          console.log(data);
+          _this.areaList = data;
+        });
+        this.areaId=-1;
+      }
+      ,
+      saveAddress(){
+        //获取参数
+        //首先把省市区的id转换成name
+        /**
+        let _this = this;
+        let provinceName = "";
+        let cityName = "";
+        let areaName = "";
+        for (let province of this.provinceList){
+          if (province.id == this.provinceId){
+            provinceName = province.name;
+            break;
+          }
+        }
+        for (let city of this.cityList){
+          if (city.id == this.cityId){
+            cityName = city.name;
+            break;
+          }
+        }
+        for (let area of this.areaList){
+          if (area.id == this.areaId){
+            areaName = area.name;
+            break;
+          }
+        }
+        //转换isDefault
+        let isDefault = this.isDefault?"1":"0";
+        let params = {
+          province: provinceName,
+          city: cityName,
+          area: areaName,
+          detailAddress: this.detailAddress,
+          tel: this.tel,
+          reciver: this.reciver,
+          emailCode: this.emailCode,
+          isDefault: isDefault,
+        }
+        console.log(params);
+        */
+        console.log($("#myModal"))
+        $("#myModal").modal("hide")
+        //调用后端接口
+        // $.post("/address/saveAddress",params,function (data) {
+        //   if (data == "ok"){
+        //     //成功
+        //     //提醒
+        //     alert("新增地址成功！")
+        //     //关闭弹窗
+        //     console.log($("#myModal"))
+        //     $("#myModal").modal('hide')
+        //     //刷新可选地址
+        //     _this.initAddressList();
+        //   }else{
+        //     alert("新增地址失败！")
+        //   }
+        // })
+
+      }
+
+
+    }
+    ,
+    created(){
+      this.initCartOrder();
+      this.initAddressList();
+      this.initProvinceList();
+    }
+
+  });
+
+
+</script>
+
+
+<div th:insert="publicFooter"/>
+<script th:src="@{/publicFooter.js}"></script>
+
+
+</body>
+</html>

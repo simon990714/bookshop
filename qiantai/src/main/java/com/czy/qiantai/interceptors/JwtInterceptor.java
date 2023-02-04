@@ -23,20 +23,23 @@ public class JwtInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //1.获取cookie中的token值
         String userTokenFromCookie = CookieUtils.getUserTokenFromCookie(request);
+        String account = "";
         //2.获取token中的account值
         try{
             if (!StringUtils.isEmpty(userTokenFromCookie)){
-                String account = JwtUtils.getAccount(userTokenFromCookie);
+                account = JwtUtils.getAccount(userTokenFromCookie);
             }
         }
         //3.有过期异常则去redis里寻找
         catch (ExpiredJwtException expiredJwtException){
-            String redisAccount = stringRedisTemplate.opsForValue().get("token");
+            String redisAccount = stringRedisTemplate.opsForValue().get(userTokenFromCookie);
             if (!StringUtils.isEmpty(redisAccount)){
-                //4.1更新cookie和redis中的token
+                //删除旧数据
+                stringRedisTemplate.delete(userTokenFromCookie);
+                //更新cookie和redis中的token
                 String newToken = JwtUtils.createToken(redisAccount, 15);
                 CookieUtils.setUserToken2Cookie(response,newToken);
-                stringRedisTemplate.opsForValue().set("userTokenFromCookie",redisAccount,30, TimeUnit.MINUTES);
+                stringRedisTemplate.opsForValue().set(newToken,redisAccount,60, TimeUnit.MINUTES);
             }
         }
         return true;

@@ -19,7 +19,8 @@ public class JwtUtils {
         //payload载荷
         builder.setIssuer("CZY");//签发人
         builder.setSubject("蜗牛学员");//面向对象
-        builder.setExpiration(new Date(new Date().getTime() + minutes * 60 * 1000));//到期时间
+        Date endDate = new Date(new Date().getTime() + minutes * 60 * 1000);
+        builder.setExpiration(endDate);//到期时间
 
         //自定义信息
         builder.claim("account", account);
@@ -32,14 +33,14 @@ public class JwtUtils {
         return token;
     }
 //解析token为claims
-    public static Claims parseClaims(String token) {
+    public static Claims parseClaims(String token)/* throws ExpiredJwtException  */{
         JwtParser parser = Jwts.parser();
         Jws<Claims> claimsJws = parser.setSigningKey(secret).parseClaimsJws(token);
         Claims body = claimsJws.getBody();
         return body;
     }
 
-    public static String getAccount(String token) {
+    public static String getAccount(String token)/* throws ExpiredJwtException */{
         Claims claims = parseClaims(token);
         return (String) claims.get("account");
     }

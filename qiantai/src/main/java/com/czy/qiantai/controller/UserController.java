@@ -103,7 +103,7 @@ public class UserController {
         CookieUtils.setUserToken2Cookie(response,token);
 
         //在redis中也存一份
-        stringRedisTemplate.opsForValue().set(token,user.getAccount(),30, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(token,user.getAccount(),60, TimeUnit.MINUTES);
 
         return "redirect:/";
     }

@@ -3,6 +3,7 @@ package com.czy.qiantai.mapper;
 import com.czy.qiantai.entity.Address;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * <p>
@@ -15,4 +16,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface AddressMapper extends BaseMapper<Address> {
 
+    @Update("update t_address set isDefault = '0' where userId = #{userId}")
+    void clearDefaultAddress(Long userId);
 }

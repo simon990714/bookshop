@@ -32,6 +32,10 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> impl
 
     @Override
     public int saveAddress(Address address) {
+        //如果是默认，则把其他的默认改掉
+        if (address.getIsDefault().equals("1")){
+            addressMapper.clearDefaultAddress(address.getUserId());
+        }
         return addressMapper.insert(address);
     }
 }

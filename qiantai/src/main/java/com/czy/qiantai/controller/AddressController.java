@@ -8,6 +8,7 @@ import com.czy.qiantai.service.UserService;
 import com.czy.qiantai.utils.CookieUtils;
 import com.czy.qiantai.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -18,7 +19,7 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author czy
@@ -34,13 +35,13 @@ public class AddressController {
     private AddressService addressService;
 
     @RequestMapping("allAddress")
-    public List<Address> allAddress(HttpServletRequest request){
+    public List<Address> allAddress(HttpServletRequest request) {
         User currentUser = getCurrentUser(request);
         return addressService.getAddressByAccount(currentUser.getId());
     }
 
 
-    private User getCurrentUser(HttpServletRequest request){
+    private User getCurrentUser(HttpServletRequest request) {
         String userTokenFromCookie = CookieUtils.getUserTokenFromCookie(request);
         String currentUserAccount = JwtUtils.getAccountWithoutException(userTokenFromCookie);
         User currentUser = userService.getUserByAccount(currentUserAccount);
@@ -49,15 +50,15 @@ public class AddressController {
     }
 
     @PostMapping("saveAddress")
-    public String saveAddress(Address address, HttpServletRequest request){
+    public String saveAddress(Address address, HttpServletRequest request) {
+        if (StringUtils.isEmpty(address.getProvince()) || StringUtils.isEmpty(address.getCity()) ) {
+            return "有必选项未填！";
+        }
         User currentUser = getCurrentUser(request);
         address.setUserId(currentUser.getId());
         address.setStatus("1");
-        int rows = addressService.saveAddress(address);
-        if (rows == 1){
-            return "ok";
-        }
-        return "添加失败！";
+        addressService.saveAddress(address);
+        return "ok";
     }
 }
 

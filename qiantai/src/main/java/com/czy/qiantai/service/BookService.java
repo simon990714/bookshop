@@ -3,6 +3,7 @@ package com.czy.qiantai.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.czy.qiantai.entity.Book;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.czy.qiantai.vo.EsBook;
 
 /**
  * <p>
@@ -17,4 +18,6 @@ public interface BookService extends IService<Book> {
     Page<Book> getTopNBook(Integer pageNo, Integer topN);
 
     Page<Book> getPageBooksByTypeId(Integer currentPage, Integer pageSize, Integer typeId);
+
+    Page<EsBook> searchBooksByEs(Integer currentPage, Integer pageSize, String searchKey);
 }

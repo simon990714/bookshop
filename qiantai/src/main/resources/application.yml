@@ -48,6 +48,10 @@ spring:
       simple:
         acknowledge-mode: manual
 
+  elasticsearch:
+    rest:
+      uris: http://localhost:9200
+
 mybatis-plus:
   mapper-locations: classpath:/mappers/*.xml
   type-aliases-package: com.czy.qiantai.vo

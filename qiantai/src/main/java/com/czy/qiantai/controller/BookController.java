@@ -4,21 +4,16 @@ package com.czy.qiantai.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.czy.qiantai.entity.Book;
 import com.czy.qiantai.service.BookService;
-import com.google.code.kaptcha.Producer;
+import com.czy.qiantai.vo.EsBook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -64,6 +59,17 @@ public class BookController {
             Integer typeId
     ){
         return bookService.getPageBooksByTypeId(currentPage,pageSize,typeId);
+    }
+
+
+    @RequestMapping("searchBooksByEs")
+    @ResponseBody
+    public Page<EsBook> searchBooksByEs(
+            @RequestParam(defaultValue = "1") Integer currentPage ,
+            @RequestParam(defaultValue = "9") Integer pageSize,
+            String searchKey
+    ){
+        return bookService.searchBooksByEs(currentPage,pageSize,searchKey);
     }
 
 

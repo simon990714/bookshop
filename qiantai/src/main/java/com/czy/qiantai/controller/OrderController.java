@@ -9,6 +9,7 @@ import com.czy.qiantai.utils.JwtUtils;
 import com.czy.qiantai.vo.CartOrder;
 import com.czy.qiantai.vo.OrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +27,7 @@ import java.util.List;
  * @author czy
  * @since 2023-01-07 12:01:19
  */
-@RestController
+@Controller
 @RequestMapping("/order")
 public class OrderController {
     @Autowired
@@ -59,10 +60,7 @@ public class OrderController {
     public String createOrder(HttpServletRequest request, @RequestParam("bookIds[]") Long[] bookIds ,@RequestParam("defaultAddressId") Long addressId ) {
         //获取当前用户id
         User userByAccount = getCurrentUser(request);
-        if (orderService.createOrder(userByAccount.getId(),bookIds,addressId) == 1){
-            return "ok";
-        }
-        return "提交订单失败";
+        return orderService.createOrder(userByAccount.getId(),bookIds,addressId);
     }
 
 
@@ -72,6 +70,10 @@ public class OrderController {
         //获取当前用户id
         User userByAccount = getCurrentUser(request);
         return orderService.getOrderVo(userByAccount.getId());
+    }
+    @RequestMapping("toMyOrder")
+    public String toMyOrder(HttpServletRequest request ) {
+        return "redirect:/myOrder.html";
     }
 
 

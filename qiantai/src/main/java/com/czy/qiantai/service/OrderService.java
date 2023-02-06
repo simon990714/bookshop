@@ -19,7 +19,7 @@ public interface OrderService extends IService<Order> {
 
     CartOrder getCartOrder(Long id, Long[] bookIds);
 
-    int createOrder(Long userId, Long[] bookIds, Long addressId);
+    String createOrder(Long userId, Long[] bookIds, Long addressId);
 
     List<OrderVo> getOrderVo(Long userId);
 }

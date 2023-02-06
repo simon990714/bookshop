@@ -52,6 +52,10 @@ spring:
     rest:
       uris: http://localhost:9200
 
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+
 mybatis-plus:
   mapper-locations: classpath:/mappers/*.xml
   type-aliases-package: com.czy.qiantai.vo

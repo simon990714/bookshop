@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -67,24 +68,50 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public int createOrder(Long userId, Long[] bookIds, Long addressId) {
+    public String createOrder(Long userId, Long[] bookIds, Long addressId) {
         CartOrder cartOrder = getCartOrder(userId, bookIds);
+        //生成订单
         List<CartItem> cartItems = cartOrder.getCartItems();
         BigDecimal totalPrice = cartOrder.getTotalPrice();
         Order order = new Order();
-        String orderNum = "woniu" + new Date().getTime();
+        String orderNum = "WONIU" + new Date().getTime();
         order.setOrderNum(orderNum);
         order.setUserId(userId);
         order.setAddressId(addressId);
-        order.setCreatetime(new Date());
+        Date now = new Date();
+        order.setCreatetime(now);
         order.setState(1);  //订单状态 1.未支付  2 . 已支付  3.退款中  4. 已退款  5.已取消
-        return orderMapper.insert(order);
+        order.setTotalprice(totalPrice);
+        orderMapper.insert(order);
+        //生成订单项目
+        for (CartItem cartItem : cartItems) {
+            Book book = bookMapper.selectById(cartItem.getBookId());
+            Item item = new Item();
+            item.setOrderId(order.getId());
+            item.setState(1);
+            item.setCreatetime(now);
+            item.setBcount(cartItem.getItemNum());
+            item.setPrice(book.getPrice());
+            item.setBookName(book.getName());
+            item.setBookId(book.getId());
+            item.setSumprice(cartItem.getSumPrice());
+            itemMapper.insert(item);
+        }
+        //删除购物车
+        HashOperations opsForHash = redisTemplate.opsForHash();
+        String[] bookIdsString = new String[bookIds.length];
+        for (int i = 0; i < bookIds.length; i++) {
+            bookIdsString[i] = bookIds[i]+"";
+        }
+        opsForHash.delete(userId+"",bookIdsString);
+        return "ok";
     }
 
     @Override
     public List<OrderVo> getOrderVo(Long userId) {
         QueryWrapper<Order> orderQueryWrapper = new QueryWrapper<>();
         orderQueryWrapper.eq("userId",userId);
+        orderQueryWrapper.orderByDesc("createtime");
         List<Order> orders = orderMapper.selectList(orderQueryWrapper);
         List<OrderVo> orderVoList = new ArrayList<>();
         for (Order order : orders) {

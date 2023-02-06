@@ -67,7 +67,7 @@
         </div>
 
         <div class="col-md-6">
-          <button class="btn btn-success" >提交订单</button>
+          <button class="btn btn-success" @click="createOrder" >提交订单</button>
         </div>
       </div>
     </div>
@@ -200,6 +200,29 @@
         })
       }
       ,
+      createOrder(){
+        if (this.bookIds.length < 1){
+          alert("提交失败！");
+          return;
+        }
+        let params = {
+          defaultAddressId: this.defaultAddressId,
+          bookIds: this.bookIds
+        }
+        console.log(params);
+        let _this = this;
+        $.post("/order/createOrder",params,function (data) {
+          console.log(data);
+          if (data == "ok"){
+            alert("订单提交成功！")
+            _this.bookIds=[];
+            location.href="/order/toMyOrder";
+          }else {
+            alert(data);
+          }
+        })
+      }
+      ,
       initProvinceList(){
         let _this = this;
         $.get("/china/queryList?pId=0",function (data) {
@@ -296,25 +319,6 @@
         this.emailCode="";
         this.isDefault="";
       }
-      ,
-      createOrder(){
-        let params = {
-          defaultAddressId: this.defaultAddressId,
-          bookIds: this.bookIds
-        }
-        $.post("/order/createOrder",params,function (data) {
-          console.log(data);
-          if (data == "ok"){
-            //成功
-            alert("提交订单成功！")
-            //跳转页面
-            location.href="myOrder.html";
-          }else{
-            alert(data);
-          }
-        })
-      }
-
 
     }
     ,

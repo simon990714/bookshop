@@ -3,6 +3,9 @@ package com.czy.qiantai.service;
 import com.czy.qiantai.entity.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.czy.qiantai.vo.CartOrder;
+import com.czy.qiantai.vo.OrderVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -15,4 +18,8 @@ import com.czy.qiantai.vo.CartOrder;
 public interface OrderService extends IService<Order> {
 
     CartOrder getCartOrder(Long id, Long[] bookIds);
+
+    int createOrder(Long userId, Long[] bookIds, Long addressId);
+
+    List<OrderVo> getOrderVo(Long userId);
 }

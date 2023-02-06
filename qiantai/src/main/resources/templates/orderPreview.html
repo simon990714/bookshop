@@ -170,7 +170,7 @@
       emailCode: '',
       userId: -1,
       status: '',
-      isDefault: ''
+      isDefault: '',
     }
     ,
     methods: {
@@ -295,6 +295,24 @@
         this.reciver="";
         this.emailCode="";
         this.isDefault="";
+      }
+      ,
+      createOrder(){
+        let params = {
+          defaultAddressId: this.defaultAddressId,
+          bookIds: this.bookIds
+        }
+        $.post("/order/createOrder",params,function (data) {
+          console.log(data);
+          if (data == "ok"){
+            //成功
+            alert("提交订单成功！")
+            //跳转页面
+            location.href="myOrder.html";
+          }else{
+            alert(data);
+          }
+        })
       }
 
 

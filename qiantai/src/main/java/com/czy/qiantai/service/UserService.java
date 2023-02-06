@@ -18,4 +18,5 @@ public interface UserService extends IService<User> {
     User getUserByEmail(String email);
 
     int reg(String account, String password, String email);
+
 }

@@ -20,11 +20,17 @@
 <div class="container-fluid" id="app" style="margin-top: 180px;margin-bottom: 100px">
 
   <div class="row">
+
+    <div class="container col-md-12" v-if="orderVoList.length<=0" >
+      <h3 style="text-align: center">还没有任何加购,快去购买吧~</h3>
+    </div>
+
+
     <div class="container">
-      <div>
+      <div v-for="orderVo in orderVoList">
         <div class="row" style="height: 40px ;line-height: 40px">
           <div class="col-md-12">
-            <p style="background-color: #CCCCCC; font-size: 15px; line-height: 40px">订单编号:xxx 下单时间:xxxx  总金额:xxx元</p>
+            <p style="background-color: #CCCCCC; font-size: 15px; line-height: 40px">订单编号:{{orderVo.orderNum}} 下单时间:{{orderVo.orderTime}}  总金额:{{orderVo.totalPrice}}元</p>
           </div>
         </div>
         <div class="row p-3">
@@ -36,23 +42,23 @@
                 <th>购买数量</th>
                 <th>金额</th>
               </tr>
-              <tr >
+              <tr v-for="orderItem in orderVo.orderItemList">
                 <td>
-                  <img style="height: 60px;width: 60px" src="">
+                  <img style="height: 60px;width: 60px" :src="orderItem.imgSrc">
                 </td>
-                <td  style="vertical-align: middle">名称</td>
-                <td  style="vertical-align: middle">购买数量</td>
-                <td  style="vertical-align: middle">金额</td>
+                <td  style="vertical-align: middle">{{orderItem.bookName}}</td>
+                <td  style="vertical-align: middle">{{orderItem.itemNum}}</td>
+                <td  style="vertical-align: middle">{{orderItem.sumPrice}}</td>
               </tr>
             </table>
           </div>
           <div class="col-md-1">
-            <button class="btn btn-primary">去支付</button>
-            <button class="btn btn-primary">取消</button>
-            <button class="btn btn-primary">退款</button>
-            <button class="btn btn-primary">退款中...</button>
-            <button class="btn btn-primary">已退款</button>
-            <button class="btn btn-primary">已取消</button>
+            <button class="btn btn-primary" v-if="orderVo.state == 1">去支付</button>
+            <button class="btn btn-primary" v-if="orderVo.state == 1">取消</button>
+            <button class="btn btn-primary" v-if="orderVo.state == 2">退款</button>
+            <button class="btn btn-primary" v-if="orderVo.state == 3">退款中...</button>
+            <button class="btn btn-primary" v-if="orderVo.state == 4">已退款</button>
+            <button class="btn btn-primary" v-if="orderVo.state == 5">已取消</button>
           </div>
         </div>
       </div>
@@ -70,15 +76,24 @@
     el: "#app"
     ,
     data: {
+      orderVoList: [],
 
     }
     ,
     methods: {
+      initOrderList(){
+        let _this = this;
+        $.get("/order/getOrderVo",function (data) {
+          console.log(data);
+          _this.orderVoList = data;
+        })
+
+      }
 
     }
     ,
     created(){
-
+      this.initOrderList();
     }
 
   });

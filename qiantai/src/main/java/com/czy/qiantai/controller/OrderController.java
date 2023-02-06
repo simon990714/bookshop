@@ -7,6 +7,7 @@ import com.czy.qiantai.service.UserService;
 import com.czy.qiantai.utils.CookieUtils;
 import com.czy.qiantai.utils.JwtUtils;
 import com.czy.qiantai.vo.CartOrder;
+import com.czy.qiantai.vo.OrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * <p>
@@ -34,6 +36,7 @@ public class OrderController {
 
 
 
+
     @RequestMapping("getAllItems")
     @ResponseBody
     public CartOrder getAllItems(HttpServletRequest request, @RequestParam("bookIds[]") Long[] bookIds) {
@@ -50,6 +53,28 @@ public class OrderController {
 
         return currentUser;
     }
+
+    @RequestMapping("createOrder")
+    @ResponseBody
+    public String createOrder(HttpServletRequest request, @RequestParam("bookIds[]") Long[] bookIds ,@RequestParam("defaultAddressId") Long addressId ) {
+        //获取当前用户id
+        User userByAccount = getCurrentUser(request);
+        if (orderService.createOrder(userByAccount.getId(),bookIds,addressId) == 1){
+            return "ok";
+        }
+        return "提交订单失败";
+    }
+
+
+    @RequestMapping("getOrderVo")
+    @ResponseBody
+    public List<OrderVo> getOrderVo(HttpServletRequest request ) {
+        //获取当前用户id
+        User userByAccount = getCurrentUser(request);
+        return orderService.getOrderVo(userByAccount.getId());
+    }
+
+
 
 
 

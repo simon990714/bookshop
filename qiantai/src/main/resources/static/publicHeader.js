@@ -3,7 +3,8 @@ let publicHeader = new Vue({
     el: "#publicHeaderApp",
     data: {
         bookTypeList: [],
-        currentAccount: ''
+        currentAccount: '',
+        searchKey: '',
     },
     methods: {
         initBookTypeList() {
@@ -22,7 +23,13 @@ let publicHeader = new Vue({
                 console.log(data);
                 _this.currentAccount = data;
             })
-
+        },
+        toBookSearch(){
+            if (this.searchKey == null || this.searchKey == ''){
+                alert("请输入您要搜索的对象！");
+                return;
+            }
+            location.href="/book/toBookSearch?searchKey="+this.searchKey;
         }
     },
     created() {

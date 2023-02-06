@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"-->
+    <!--          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>-->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>-->
+    <link rel="stylesheet" th:href="@{/bootstrap.min.css}" />
+    <script th:src="@{/vue.js}"></script>
+</head>
+<body>
+
+<!--1.公共头部-->
+<div th:insert="publicHeader"/>
+<script th:src="@{/publicHeader.js}"></script>
+
+
+<!--2.主体内容-->
+<div class="container-fluid" id="app" style="margin-top: 180px;margin-bottom: 100px">
+
+
+
+    <div class="container" v-if="totalPage >= 1">
+
+        <div class="row">
+            <div class="col-md-12">
+                <p style="background-color: cornflowerblue ; color: white; font-size: 30px" v-text="typeName"></p>
+            </div>
+        </div>
+
+        <div class="row">
+
+
+            <div class="col-sm-6 col-md-4" v-for="(book,index) in books">
+                <div class="thumbnail">
+                    <img v-bind:src="book.imgsrc" alt="..." class="col-sm-6 col-md-6">
+                    <div class="caption text-left">
+<!--                        <p>排名:<span v-text="'第'+(index+1)"></span></p>-->
+                        <p>书名:<span v-text="book.name"></span></p>
+                        <p>价格:<span v-text="book.price"></span></p>
+                        <p>&nbsp;</p>
+                        <p>
+                            <a class="btn btn-primary" :href="'/book/singleBook?bookId=' + book.id">详情</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a class="btn btn-success" @click.prevent="addToCart(book.id)">加入购物车</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 col-md-offset-5 col-lg-offset-4col-xl-offset-5">
+                    <ul class="pagination justify-content-center">
+                        <li><a href="javascript:void(0)" @click.prevent="go(currentPage-1)">&laquo;</a></li>
+                        <li><a href="javascript:void(0)" v-for="n in totalPage" v-text="n"
+                               @click.prevent="go(n)">n</a></li>
+                        <li><a href="javascript:void(0)" @click.prevent="go(currentPage+1)">&raquo;</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="container" v-if="totalPage < 1">
+        <h3 style="text-align: center">暂无 {{searchKey}} 相关书籍</h3>
+    </div>
+
+</div>
+
+<script>
+
+    console.log(".........index...........")
+
+    new Vue({
+        el: "#app"
+        ,
+        data: {
+            books: [],
+            currentPage: 1,
+            pageSize: 3,
+            total: 0,
+            totalPage: 0,
+            searchKey: '[[${searchKey}]]'
+
+        }
+        ,
+        methods: {
+            initTopNineBook() {
+                console.log(this.searchKey);
+                //回显
+                publicHeader._data.searchKey=this.searchKey;
+                let _this = this;
+                let url = "/book/searchBooksByEs";
+                let params = {
+                    currentPage: this.currentPage,
+                    pageSize: this.pageSize,
+                    searchKey: this.searchKey
+                }
+                $.post(url, params, function (data) {
+                    console.log(data);
+                    _this.books = data.records;
+                    _this.currentPage = data.current;
+                    _this.pageSize = data.size;
+                    _this.total = data.total;
+                    _this.totalPage = data.pages;
+                }, "json")
+            },
+
+            go(pageNum) {
+                if (pageNum < 1 || pageNum > this.totalPage) {
+                    console.log("该页码不存在！")
+                    return;
+                }
+                this.currentPage = pageNum;
+                this.initTopNineBook();
+            },
+            addToCart(bookId){
+                console.log(bookId)
+                //判断是否登陆
+                console.log(publicHeader._data.currentAccount);
+                if (!publicHeader._data.currentAccount){
+                    alert("请先登陆！")
+                    location.href="/login.html"
+                }
+                //后台添加购物车
+                $.get("/mycart/add?bookId="+bookId,function (data) {
+                    console.log(data);
+                    if (data == "ok"){
+                        alert("添加购物车成功！")
+                    }else{
+                        alert("添加购物车失败！")
+                    }
+                })
+            }
+
+        },
+        created() {
+            this.initTopNineBook();
+            this.initTypeName();
+        }
+
+    });
+
+</script>
+
+
+<!--3.公共底部-->
+<div th:insert="publicFooter"/>
+<script th:src="@{/publicFooter.js}"></script>
+
+
+</body>
+</html>

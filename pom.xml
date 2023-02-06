@@ -19,6 +19,7 @@
         <module>Demos/MyBatisPlusDemo</module>
         <module>Demos/RedisDemo</module>
         <module>Demos/RabbitMQDemo</module>
+        <module>Demos/ElasticsearchDemo</module>
     </modules>
 
     <properties>

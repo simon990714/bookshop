@@ -22,5 +22,13 @@ public class MqConst {
 
 
 
+    //return
+    public static final String RETURN_EXCHANGE = "return_exchange";
+    public static final String RETURN_QUEUE1 = "return_queue1";
+    public static final String RETURN_QUEUE2 = "return_queue2";
+
+
+
+
 
 }

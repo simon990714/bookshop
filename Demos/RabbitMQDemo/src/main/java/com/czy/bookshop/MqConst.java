@@ -28,6 +28,11 @@ public class MqConst {
     public static final String RETURN_QUEUE2 = "return_queue2";
 
 
+    //back
+    public static final String BACK_EXCHANGE = "back_exchange";
+    public static final String BACK_QUEUE = "back_queue";
+
+
 
 
 

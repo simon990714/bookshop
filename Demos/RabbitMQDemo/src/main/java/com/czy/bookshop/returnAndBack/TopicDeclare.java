@@ -7,6 +7,8 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 public class TopicDeclare {
@@ -14,8 +16,9 @@ public class TopicDeclare {
         Connection connection = ConnectionUtils.getConnection();
         Channel channel = connection.createChannel();
 
-
-        channel.exchangeDeclare(MqConst.RETURN_EXCHANGE, BuiltinExchangeType.TOPIC,true);
+        Map<String,Object> map = new HashMap<>();
+        map.put("alternate-exchange",MqConst.BACK_EXCHANGE);
+        channel.exchangeDeclare(MqConst.RETURN_EXCHANGE, BuiltinExchangeType.TOPIC,true,false,map);
 
 
         channel.queueDeclare(MqConst.RETURN_QUEUE1,true,false,false,null);

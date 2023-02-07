@@ -32,6 +32,14 @@ public class MqConst {
     public static final String BACK_EXCHANGE = "back_exchange";
     public static final String BACK_QUEUE = "back_queue";
 
+    //dead
+    public static String DEAD_EXCHANGE="dead_exchange";
+    public static String DEAD_QUEUE="dead_queue";
+    public static String DeadLetterRoutingKey="DeadLetterRoutingKey";
+    public static String NORMAL_EXCHANGE="normal_exchange";
+    public static String NORMAL_QUEUE="normal_queue";
+    public static String ROUTING_KEY="ttl_key";
+
 
 
 

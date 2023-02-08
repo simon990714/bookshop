@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 public class RabbitMQTest {
@@ -46,6 +47,11 @@ public class RabbitMQTest {
         //消息只能是String, byte[] and Serializable payloads，只要监听的时候取出该类
         rabbitTemplate.convertAndSend("direct_exchange","insert",JSONUtils.createJson(user1));
         rabbitTemplate.convertAndSend("direct_exchange","delete",JSONUtils.createJson(user2));
+        try {
+            TimeUnit.SECONDS.sleep(5L);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

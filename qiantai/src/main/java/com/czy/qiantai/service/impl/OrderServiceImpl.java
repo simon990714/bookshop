@@ -13,6 +13,7 @@ import com.czy.qiantai.vo.CartItem;
 import com.czy.qiantai.vo.CartOrder;
 import com.czy.qiantai.vo.OrderItem;
 import com.czy.qiantai.vo.OrderVo;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -41,6 +42,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private ItemMapper itemMapper;
     @Autowired
     private BookMapper bookMapper;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
@@ -83,6 +86,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setState(1);  //订单状态 1.未支付  2 . 已支付  3.退款中  4. 已退款  5.已取消
         order.setTotalprice(totalPrice);
         orderMapper.insert(order);
+        System.out.println("订单创建时间：" + new Date());
+
+        //消息发送给延迟队列，15分钟后判断是否支付
+        rabbitTemplate.convertAndSend("delay_exchange","confirm.order",order.getId());
+
+
         //生成订单项目
         for (CartItem cartItem : cartItems) {
             Book book = bookMapper.selectById(cartItem.getBookId());

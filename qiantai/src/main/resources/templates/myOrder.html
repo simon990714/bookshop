@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>myOrder</title>
-  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-  <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"-->
-  <!--          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>-->
-  <!--    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>-->
-  <link rel="stylesheet" th:href="@{/bootstrap.min.css}" />
-  <script th:src="@{/vue.js}"></script>
+    <meta charset="UTF-8">
+    <title>myOrder</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"-->
+    <!--          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>-->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>-->
+    <link rel="stylesheet" th:href="@{/bootstrap.min.css}"/>
+    <script th:src="@{/vue.js}"></script>
 </head>
 <body>
 
@@ -16,87 +16,100 @@
 <script th:src="@{/publicHeader.js}"></script>
 
 
-
 <div class="container-fluid" id="app" style="margin-top: 180px;margin-bottom: 100px">
 
-  <div class="row">
+    <div class="row">
 
-    <div class="container col-md-12" v-if="orderVoList.length<=0" >
-      <h3 style="text-align: center">还没有任何加购,快去购买吧~</h3>
-    </div>
-
-
-    <div class="container">
-      <div v-for="orderVo in orderVoList">
-        <div class="row" style="height: 40px ;line-height: 40px">
-          <div class="col-md-12">
-            <p style="background-color: #CCCCCC; font-size: 15px; line-height: 40px">订单编号:{{orderVo.orderNum}} 下单时间:{{orderVo.orderTime}}  总金额:{{orderVo.totalPrice}}元</p>
-          </div>
+        <div class="container col-md-12" v-if="orderVoList.length<=0">
+            <h3 style="text-align: center">还没有任何加购,快去购买吧~</h3>
         </div>
-        <div class="row p-3">
-          <div class="col-md-10 col-md-offset-1">
-            <table class="table">
-              <tr>
-                <th>图片</th>
-                <th>名称</th>
-                <th>购买数量</th>
-                <th>金额</th>
-              </tr>
-              <tr v-for="orderItem in orderVo.orderItemList">
-                <td>
-                  <img style="height: 60px;width: 60px" :src="orderItem.imgSrc">
-                </td>
-                <td  style="vertical-align: middle">{{orderItem.bookName}}</td>
-                <td  style="vertical-align: middle">{{orderItem.itemNum}}</td>
-                <td  style="vertical-align: middle">{{orderItem.sumPrice}}</td>
-              </tr>
-            </table>
-          </div>
-          <div class="col-md-1">
-            <button class="btn btn-primary" v-if="orderVo.state == 1">去支付</button>
-            <button class="btn btn-primary" v-if="orderVo.state == 1">取消</button>
-            <button class="btn btn-primary" v-if="orderVo.state == 2">退款</button>
-            <button class="btn btn-primary" v-if="orderVo.state == 3">退款中...</button>
-            <button class="btn btn-primary" v-if="orderVo.state == 4">已退款</button>
-            <button class="btn btn-primary" v-if="orderVo.state == 5">已取消</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
-  </div>
+
+        <div class="container">
+            <div v-for="orderVo in orderVoList">
+                <div class="row" style="height: 40px ;line-height: 40px">
+                    <div class="col-md-12">
+                        <p style="background-color: #CCCCCC; font-size: 15px; line-height: 40px">
+                            订单编号:{{orderVo.orderNum}} 下单时间:{{orderVo.orderTime}}
+                            总金额:{{orderVo.totalPrice}}元</p>
+                    </div>
+                </div>
+                <div class="row p-3">
+                    <div class="col-md-10 col-md-offset-1">
+                        <table class="table">
+                            <tr>
+                                <th>图片</th>
+                                <th>名称</th>
+                                <th>购买数量</th>
+                                <th>金额</th>
+                            </tr>
+                            <tr v-for="orderItem in orderVo.orderItemList">
+                                <td>
+                                    <img style="height: 60px;width: 60px" :src="orderItem.imgSrc">
+                                </td>
+                                <td style="vertical-align: middle">{{orderItem.bookName}}</td>
+                                <td style="vertical-align: middle">{{orderItem.itemNum}}</td>
+                                <td style="vertical-align: middle">{{orderItem.sumPrice}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-primary" v-if="orderVo.state == 1" @click="updateOrderState(orderVo.id,2)">去支付</button>
+                        <button class="btn btn-primary" v-if="orderVo.state == 1" @click="updateOrderState(orderVo.id,5)">取消</button>
+                        <button class="btn btn-primary" v-if="orderVo.state == 2" @click="updateOrderState(orderVo.id,3)">退款</button>
+                        <button class="btn btn-primary" v-if="orderVo.state == 3">退款中...</button>
+                        <button class="btn btn-primary" v-if="orderVo.state == 4">已退款</button>
+                        <button class="btn btn-primary" v-if="orderVo.state == 5">已取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 </div>
 
 <script>
 
-  console.log(".........myOrder...........")
+    console.log(".........myOrder...........")
 
-  new Vue({
-    el: "#app"
-    ,
-    data: {
-      orderVoList: [],
+    new Vue({
+        el: "#app"
+        ,
+        data: {
+            orderVoList: [],
 
-    }
-    ,
-    methods: {
-      initOrderList(){
-        let _this = this;
-        $.get("/order/getOrderVo",function (data) {
-          console.log(data);
-          _this.orderVoList = data;
-        })
+        }
+        ,
+        methods: {
+            initOrderList() {
+                let _this = this;
+                $.get("/order/getOrderVo", function (data) {
+                    console.log(data);
+                    _this.orderVoList = data;
+                })
 
-      }
+            }
+            ,
+            updateOrderState(orderId, newState) {
+                let _this = this;
+                $.post("/order/updateOrderState",
+                    {orderId: orderId,
+                    newState: newState}
+                    , function (data) {
+                        console.log(data);
+                        _this.initOrderList();
+                    }
+                )
+            }
 
-    }
-    ,
-    created(){
-      this.initOrderList();
-    }
+        }
+        ,
+        created() {
+            this.initOrderList();
+        }
 
-  });
+    });
 
 
 </script>

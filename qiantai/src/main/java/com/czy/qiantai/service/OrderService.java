@@ -22,4 +22,6 @@ public interface OrderService extends IService<Order> {
     String createOrder(Long userId, Long[] bookIds, Long addressId);
 
     List<OrderVo> getOrderVo(Long userId);
+
+    void updateOrderState(Long orderId, Integer newState);
 }

@@ -36,8 +36,6 @@ public class OrderController {
     private OrderService orderService;
 
 
-
-
     @RequestMapping("getAllItems")
     @ResponseBody
     public CartOrder getAllItems(HttpServletRequest request, @RequestParam("bookIds[]") Long[] bookIds) {
@@ -77,7 +75,12 @@ public class OrderController {
     }
 
 
-
+    @RequestMapping("updateOrderState")
+    @ResponseBody
+    public String updateOrderState(Long orderId , Integer newState) {
+        orderService.updateOrderState(orderId,newState);
+        return "ok";
+    }
 
 
 

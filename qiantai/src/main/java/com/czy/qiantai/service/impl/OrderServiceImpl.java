@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -148,5 +147,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             orderVoList.add(orderVo);
         }
         return orderVoList;
+    }
+
+    @Override
+    public void updateOrderState(Long orderId, Integer newState) {
+        Order order = orderMapper.selectById(orderId);
+        order.setState(newState);
+        orderMapper.updateById(order);
     }
 }

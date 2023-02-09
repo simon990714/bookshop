@@ -20,6 +20,7 @@
         <module>Demos/RedisDemo</module>
         <module>Demos/RabbitMQDemo</module>
         <module>Demos/ElasticsearchDemo</module>
+        <module>Demos/QuartzDemo</module>
     </modules>
 
     <properties>

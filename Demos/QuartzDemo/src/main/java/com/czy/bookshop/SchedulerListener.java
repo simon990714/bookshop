@@ -22,7 +22,7 @@ public class SchedulerListener {
 
     @Scheduled(cron = "0 20 16 * * ?")
     public void schedule() throws SchedulerException {
-        myScheduler.start();
+//        myScheduler.start();
         System.out.println("定时任务开始执行" + new Date());
     }
 }

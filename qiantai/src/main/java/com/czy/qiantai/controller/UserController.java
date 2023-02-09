@@ -117,9 +117,12 @@ public class UserController {
     }
 
     @RequestMapping("logout")
-    public String logout(HttpSession session,HttpServletResponse response){
+    public String logout(HttpSession session,HttpServletResponse response,HttpServletRequest request){
 //        session.removeAttribute("currentAccount");
+        String userTokenFromCookie = CookieUtils.getUserTokenFromCookie(request);
         CookieUtils.deleteUserTokenFromCookie(response);
+        //同时删除redis中的数据
+        stringRedisTemplate.delete(userTokenFromCookie);
         return "redirect:/";
     }
 
